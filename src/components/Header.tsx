@@ -3,11 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "@/assets/logo/cvgen.png"
-import { FaUser } from 'react-icons/fa';
+import { FaUser, FaBars, FaTimes } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
+import { useState } from "react";
 
 export default function Header() {
   const { user } = useAuth();
+  // Mobil menü durumu
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <header className="border-b fixed top-0 left-0 right-0 z-10 bg-white">
@@ -23,7 +26,15 @@ export default function Header() {
           />
         </Link>
 
-        {/* Ana Menü */}
+        {/* Mobil Menü Butonu */}
+        <button 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="md:hidden text-foreground p-2"
+        >
+          {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        </button>
+
+        {/* Ana Menü - Desktop */}
         <nav className="hidden md:flex items-center gap-8">
           <Link 
             href="/cv-olustur" 
@@ -51,8 +62,8 @@ export default function Header() {
           </Link>
         </nav>
 
-        {/* Giriş/Kayıt veya Hesabım Butonu */}
-        <div className="flex items-center gap-4">
+        {/* Giriş/Kayıt veya Hesabım Butonu - Desktop */}
+        <div className="hidden md:flex items-center gap-4">
           {user ? (
             <Link
               href="/hesabim"
@@ -78,6 +89,73 @@ export default function Header() {
             </>
           )}
         </div>
+
+        {/* Mobil Menü */}
+        {isMobileMenuOpen && (
+          <div className="absolute top-16 left-0 right-0 bg-white border-b md:hidden">
+            <nav className="flex flex-col p-4">
+              <Link 
+                href="/cv-olustur" 
+                className="py-3 text-foreground hover:text-foreground/80 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                CV Oluştur
+              </Link>
+              <Link 
+                href="/ozgecmislerim"
+                className="py-3 text-foreground hover:text-foreground/80 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Özgeçmişlerim
+              </Link>
+              <Link 
+                href="/blog" 
+                className="py-3 text-foreground hover:text-foreground/80 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Blog
+              </Link>
+              <Link 
+                href="/iletisim" 
+                className="py-3 text-foreground hover:text-foreground/80 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                İletişim
+              </Link>
+              
+              {/* Giriş/Kayıt veya Hesabım Butonu - Mobil */}
+              <div className="border-t mt-3 pt-3">
+                {user ? (
+                  <Link
+                    href="/hesabim"
+                    className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-full hover:bg-primary/90 transition-all"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <FaUser className="text-sm" />
+                    <span>Hesabım</span>
+                  </Link>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    <Link
+                      href="/giris-yap"
+                      className="text-center py-2 text-foreground hover:text-foreground/80 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Giriş Yap
+                    </Link>
+                    <Link
+                      href="/kayit-ol"
+                      className="text-center bg-foreground text-background py-2 rounded-md hover:bg-foreground/90 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Kayıt Ol
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );
