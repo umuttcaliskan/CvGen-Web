@@ -12,17 +12,29 @@ export async function generatePDF(cv: any, templateId: TemplateId, profileImageB
   let safeProfileImageBase64: string | null = null;
   if (profileImageBase64) {
     try {
-      // Eğer base64 verisi data:image prefix'i içermiyorsa ekle
-      if (!profileImageBase64.startsWith('data:image')) {
-        safeProfileImageBase64 = `data:image/jpeg;base64,${profileImageBase64}`;
-      } else {
-        safeProfileImageBase64 = profileImageBase64;
-      }
+      const base64Data = profileImageBase64.replace(/^data:image\/(png|jpeg|jpg);base64,/, '');
+      const cleanBase64 = base64Data.replace(/[^A-Za-z0-9+/=]/g, '');
+      safeProfileImageBase64 = `data:image/jpeg;base64,${cleanBase64}`;
       
-      // Base64 verisinin geçerliliğini kontrol et
       await new Promise((resolve, reject) => {
         const img = new Image();
-        img.onload = () => resolve(true);
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0);
+            try {
+              safeProfileImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
+              resolve(true);
+            } catch (e) {
+              reject(new Error('Resim dönüştürme hatası'));
+            }
+          } else {
+            reject(new Error('Canvas context oluşturulamadı'));
+          }
+        };
         img.onerror = () => reject(new Error('Geçersiz resim verisi'));
         img.src = safeProfileImageBase64 as string;
       });
@@ -47,11 +59,12 @@ export async function generatePDF(cv: any, templateId: TemplateId, profileImageB
     const pdf = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
-      format: 'a4'
+      format: 'a4',
+      compress: true
     });
 
-    const pageWidth = 210;
-    const pageHeight = 297;
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
 
     // Container'ı seç
     const mainContainer = container.querySelector('.container');
@@ -87,9 +100,7 @@ export async function generatePDF(cv: any, templateId: TemplateId, profileImageB
 
         img.addEventListener('load', loadHandler);
         img.addEventListener('error', errorHandler);
-
-        // 3 saniye sonra timeout
-        setTimeout(errorHandler, 3000);
+        setTimeout(errorHandler, 10000);
       });
     }));
 
@@ -98,14 +109,45 @@ export async function generatePDF(cv: any, templateId: TemplateId, profileImageB
       useCORS: true,
       allowTaint: true,
       background: '#ffffff',
-      width: pageWidth * 3.78,
-      height: pageHeight * 3.78,
-      logging: false
+      width: pageWidth * 3.779528,
+      height: mainContainer.scrollHeight * 3.779528,
+      logging: true
     });
 
     // Canvas'ı PDF'e ekle
-    const imgData = canvas.toDataURL('image/jpeg', 0.95);
-    pdf.addImage(imgData, 'JPEG', 0, 0, pageWidth, pageHeight);
+    const imgData = canvas.toDataURL('image/jpeg', 1.0);
+
+    // Boyutları hesapla
+    const scale = pageWidth / canvas.width;
+    const scaledHeight = canvas.height * scale;
+    const totalPages = Math.ceil(scaledHeight / pageHeight);
+
+    console.log('PDF Boyutları:', {
+      canvasWidth: canvas.width,
+      canvasHeight: canvas.height,
+      scale,
+      scaledHeight,
+      pageHeight,
+      totalPages
+    });
+
+    // Her sayfa için görüntüyü ekle
+    for (let page = 0; page < totalPages; page++) {
+      if (page > 0) {
+        pdf.addPage();
+      }
+
+      pdf.addImage(
+        imgData,
+        'JPEG',
+        0,                    // x
+        -(page * pageHeight), // y
+        pageWidth,           // width
+        scaledHeight,        // height
+        undefined,           // alias
+        'FAST'              // compression
+      );
+    }
 
     // Temizlik
     document.body.removeChild(container);

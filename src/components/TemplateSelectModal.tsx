@@ -5,7 +5,7 @@ import CvImage from '@/assets/images/templates/cv3.png';
 import { generatePDF } from '@/utils/pdfGenerator';
 import { useAuth } from '@/context/AuthContext';
 import { getDownloadURL, ref, getStorage } from 'firebase/storage';
-import { TemplateId } from '@/templates';
+import { TemplateId, templateList } from '@/templates';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebaseConfig';
 
@@ -23,38 +23,12 @@ interface TemplateSelectModalProps {
   cvData: any; // CV verisi
 }
 
-const templates: Template[] = [
-  { 
-    id: 'modern', 
-    name: 'Modern', 
-    image: CvImage,
-    thumbnail: CvImage
-  },
-  { 
-    id: 'professional', 
-    name: 'Profesyonel', 
-    image: CvImage,
-    thumbnail: CvImage
-  },
-  { 
-    id: 'elegant', 
-    name: 'Zarif', 
-    image: CvImage,
-    thumbnail: CvImage
-  },
-  { 
-    id: 'creative', 
-    name: 'Yaratıcı', 
-    image: CvImage,
-    thumbnail: CvImage
-  },
-  { 
-    id: 'minimal', 
-    name: 'Minimal', 
-    image: CvImage,
-    thumbnail: CvImage
-  }
-];
+const templates: Template[] = templateList.map(template => ({
+  id: template.id,
+  name: template.name,
+  image: CvImage,
+  thumbnail: CvImage
+}));
 
 const TemplateSelectModal: React.FC<TemplateSelectModalProps> = ({ 
   isOpen, 
@@ -91,30 +65,29 @@ const TemplateSelectModal: React.FC<TemplateSelectModalProps> = ({
         const imageRef = ref(storage, userData.profileImage);
         const url = await getDownloadURL(imageRef);
         
-        // Fetch API ile resmi indir
-        const response = await fetch(url, {
-          mode: 'no-cors',
-          cache: 'no-cache',
-          headers: {
-            'Access-Control-Allow-Origin': '*'
-          }
-        });
+        console.log('Profil resmi URL:', url);
         
-        if (!response.ok && response.type !== 'opaque') {
+        // API route üzerinden resmi al
+        const response = await fetch('/api/get-profile-image', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ imageUrl: url }),
+        });
+
+        if (!response.ok) {
           throw new Error('Resim indirilemedi');
         }
 
-        // Base64'e dönüştür
-        const blob = await response.blob();
-        const reader = new FileReader();
-        const base64Image = await new Promise<string>((resolve, reject) => {
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        });
+        const data = await response.json();
+        
+        if (data.error) {
+          throw new Error(data.error);
+        }
 
-        console.log('Profil resmi başarıyla yüklendi');
-        setProfileImage(base64Image);
+        console.log('Profil resmi base64 formatına dönüştürüldü');
+        setProfileImage(data.imageData);
 
       } catch (error) {
         console.error('Profil resmi yüklenirken hata:', error);

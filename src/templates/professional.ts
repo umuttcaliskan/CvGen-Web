@@ -83,8 +83,6 @@ export const professionalTemplate = {
             }
             .section {
               margin-bottom: 25px;
-              break-inside: avoid;
-              page-break-inside: avoid;
             }
             .section-title {
               font-size: 20px;
@@ -95,8 +93,6 @@ export const professionalTemplate = {
             }
             .experience-item {
               margin-bottom: 20px;
-              break-inside: avoid;
-              page-break-inside: avoid;
             }
             .item-title {
               font-weight: bold;
@@ -156,6 +152,14 @@ export const professionalTemplate = {
                   ${safeCV.personal.email ? `<div class="contact-info">📧 ${safeCV.personal.email}</div>` : ''}
                   ${safeCV.personal.phone ? `<div class="contact-info">📱 ${safeCV.personal.phone}</div>` : ''}
                   ${safeCV.personal.address ? `<div class="contact-info">📍 ${safeCV.personal.address}</div>` : ''}
+                </div>
+
+                <div class="sidebar-section">
+                  <h2 class="sidebar-title">Kişisel Bilgiler</h2>
+                  ${safeCV.personal.birthDate ? `<div class="contact-info">🎂 ${safeCV.personal.birthDate}</div>` : ''}
+                  ${safeCV.personal.maritalStatus ? `<div class="contact-info">💑 ${safeCV.personal.maritalStatus}</div>` : ''}
+                  ${safeCV.personal.militaryStatus ? `<div class="contact-info">🎖️ ${safeCV.personal.militaryStatus}</div>` : ''}
+                  ${safeCV.personal.drivingLicense ? `<div class="contact-info">🚗 ${safeCV.personal.drivingLicense}</div>` : ''}
                 </div>
               ` : ''}
 
