@@ -1,10 +1,11 @@
-'use client'; // İstemci bileşeni olarak işaretliyoruz
+'use client';
 
 import React, { useState } from 'react';
-import { auth } from '@/firebaseConfig'; 
-import { createUserWithEmailAndPassword } from 'firebase/auth'; 
-import { db } from '@/firebaseConfig'; // Firestore'u içe aktar
-import { setDoc, doc } from 'firebase/firestore'; // Firestore'da belge ayarlamak için gerekli fonksiyonlar
+import { auth } from '@/firebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { db } from '@/firebaseConfig';
+import { setDoc, doc } from 'firebase/firestore';
+import Link from 'next/link';
 
 function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -28,11 +29,11 @@ function RegisterPage() {
       console.log('Kullanıcı kaydedildi:', userCredential.user);
 
       // Kullanıcı bilgilerini Firestore'a ekleme
-      const userId = userCredential.user.uid; // Kullanıcı ID'sini al
+      const userId = userCredential.user.uid;
       await setDoc(doc(db, 'users', userId), {
         fullName: `${formData.firstName} ${formData.lastName}`,
         email: formData.email,
-        birthDate: formatDate(formData.birthDate), // Tarihi formatla
+        birthDate: formatDate(formData.birthDate),
       });
 
       console.log('Kullanıcı bilgileri Firestore\'a eklendi.');
@@ -41,13 +42,12 @@ function RegisterPage() {
     }
   };
 
-  // Tarih formatlama fonksiyonu
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Aylar 0'dan başlar
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
-    return `${day}-${month}-${year}`; // DD-MM-YYYY formatı
+    return `${day}-${month}-${year}`;
   };
 
   return (
@@ -126,6 +126,12 @@ function RegisterPage() {
             Kayıt Ol
           </button>
         </form>
+        <div className="mt-6 text-center text-sm text-gray-600">
+          Zaten hesabınız var mı?{' '}
+          <Link href="/giris-yap" className="text-primary hover:text-primary/80 font-medium">
+            Giriş Yapın
+          </Link>
+        </div>
       </div>
     </div>
   );

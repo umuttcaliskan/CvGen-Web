@@ -1,6 +1,5 @@
 import React from 'react'
 import Banner from '../../components/Banner'
-import bannerImage from '@/assets/images/iletisim-banner.png'
 import { FaEnvelope, FaPhone } from "react-icons/fa"
 
 function ContactPage() {
@@ -9,7 +8,6 @@ function ContactPage() {
       <Banner 
         title="Hayalinizdeki Kariyere Bir Adım Daha" 
         description="Sorularınız, önerileriniz veya işbirliği fırsatları için buradayız. CvGen ailesi olarak size yardımcı olmaktan mutluluk duyarız." 
-        imageSrc={bannerImage} 
       />
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="grid md:grid-cols-2 gap-8">

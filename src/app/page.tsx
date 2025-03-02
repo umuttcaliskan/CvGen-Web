@@ -1,17 +1,22 @@
-import React from 'react'
-import Header from '@/components/Header'
-import HomeBanner from "@/components/HomeComponents/HomeBanner"
-import MobileAppPromo from '@/components/HomeComponents/MobileAppPromo'
-import EasyCV from '@/components/HomeComponents/EasyCv'
+"use client";
 
-function Home() {
+import React from 'react';
+import HomeBanner from '@/components/HomeComponents/HomeBanner';
+import Features from '@/components/HomeComponents/Features';
+import Stats from '@/components/HomeComponents/Stats';
+import MobileApp from '@/components/HomeComponents/MobileApp';
+import Testimonials from '@/components/HomeComponents/Testimonials';
+import CTA from '@/components/HomeComponents/CTA';
+
+export default function Home() {
   return (
-    <div>
-      <HomeBanner/>
-      <MobileAppPromo/>
-      <EasyCV/>
+    <div className="min-h-screen">
+      <HomeBanner />
+      <MobileApp />
+      <Stats />
+      <Features />
+      <CTA />
+      <Testimonials />
     </div>
-  )
+  );
 }
-
-export default Home

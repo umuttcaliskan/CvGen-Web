@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Banner from '@/components/Banner';
-import BannerImage from '@/assets/images/cvtemplate.webp';
+import BannerGray from '@/components/BannerGray';
 import { FaUser, FaFileAlt, FaGraduationCap, FaCertificate, FaBriefcase, FaStar, FaGlobe, FaUsers, FaCheck, FaChevronRight } from 'react-icons/fa';
-import { db, auth } from '@/firebaseConfig';
+import { db } from '@/firebaseConfig';
 import { collection, addDoc, updateDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -16,8 +15,9 @@ import LanguagesModal from '@/components/CreateComponents/LanguagesModal';
 import PersonalInfoModal from '@/components/CreateComponents/PersonalInfoModal';
 import ReferencesModal from '@/components/CreateComponents/ReferencesModal';
 import SkillsModal from '@/components/CreateComponents/SkillsModal';
+import { FieldValue } from 'firebase/firestore';
+import { CVData, CVSectionData } from '@/types/cv';
 
-// CV bölümleri için tip tanımı
 interface CVSection {
   id: string;
   title: string;
@@ -26,56 +26,74 @@ interface CVSection {
   completed: boolean;
 }
 
-// CV verisi için tip tanımı
-interface CVData {
-  title: string;
-  personal: {
+interface BaseSection {
+  id: string;
+  [key: string]: any;
+}
+
+interface PersonalInfo extends BaseSection {
+  fullName: string;
+  email: string;
+  phone: string;
+  birthDate: string;
+  address: string;
+}
+
+interface Education extends BaseSection {
+  schoolName: string;
+  department: string;
+  startDate: string;
+  endDate: string;
+}
+
+interface Certificate extends BaseSection {
+  name: string;
+  institution: string;
+  date: string;
+}
+
+interface Experience extends BaseSection {
+  companyName: string;
+  position: string;
+  startDate: string;
+  endDate: string;
+  description: string;
+}
+
+interface Skill extends BaseSection {
+  name: string;
+  level: string;
+}
+
+interface Language extends BaseSection {
+  name: string;
+  level: string;
+}
+
+interface Reference extends BaseSection {
+  fullName: string;
+  company: string;
+  position: string;
+  phone: string;
+  email: string;
+}
+
+interface CVDataUpdate {
+  userId: string;
+  updatedAt: FieldValue;
+  createdAt?: FieldValue;
+  [key: string]: any;
+}
+
+// PersonalInfoModal props tipini güncelle
+interface PersonalInfoModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (data: PersonalInfo) => void;
+  initialData: {
     fullName: string;
-    email: string;
-    phone: string;
-    birthDate: string;
-    address: string;
-  } | null;
-  about: string | null;
-  education: Array<{
-    id: string;
-    schoolName: string;
-    department: string;
-    startDate: string;
-    endDate: string;
-  }> | null;
-  certificates: Array<{
-    id: string;
-    name: string;
-    institution: string;
-    date: string;
-  }> | null;
-  experience: Array<{
-    id: string;
-    companyName: string;
-    position: string;
-    startDate: string;
-    endDate: string;
-    description: string;
-  }> | null;
-  skills: Array<{
-    id: string;
-    name: string;
-    level: string;
-  }> | null;
-  languages: Array<{
-    id: string;
-    name: string;
-    level: string;
-  }> | null;
-  references: Array<{
-    id: string;
-    fullName: string;
-    company: string;
-    position: string;
-    phone: string;
-    email: string;
-  }> | null;
+    [key: string]: unknown;
+  } | undefined;
 }
 
 export default function CreateCV() {
@@ -86,7 +104,6 @@ export default function CreateCV() {
   const editId = searchParams.get('edit');
   const [isEditMode, setIsEditMode] = useState(false);
   
-  // CV bölümlerinin tanımlanması
   const [cvSections, setCvSections] = useState<CVSection[]>([
     {
       id: 'personal',
@@ -158,7 +175,7 @@ export default function CreateCV() {
     references: null
   });
 
-  // CV verilerini yükle
+  // CV verilerini yükleme
   useEffect(() => {
     const loadCV = async () => {
       if (!editId || !user) return;
@@ -167,9 +184,8 @@ export default function CreateCV() {
         const cvDoc = await getDoc(doc(db, 'cvs', editId));
         if (cvDoc.exists()) {
           const data = cvDoc.data();
-          console.log('Firestore\'dan gelen ham veri:', data); // Debug için
+          console.log('Firestore\'dan gelen ham veri:', data);
 
-          // Her bir alanı ayrı ayrı işleyip dönüştürelim
           const processedData: CVData = {
             title: data.title || 'İsimsiz CV',
             personal: data.personal ? {
@@ -177,7 +193,8 @@ export default function CreateCV() {
               email: data.personal.email || '',
               phone: data.personal.phone || '',
               birthDate: data.personal.birthDate || '',
-              address: data.personal.address || ''
+              address: data.personal.address || '',
+              ...data.personal
             } : null,
             
             about: typeof data.about === 'string' ? data.about : null,
@@ -228,10 +245,10 @@ export default function CreateCV() {
             })) : null
           };
 
-          console.log('İşlenmiş veri:', processedData); // Debug için
+          console.log('İşlenmiş veri:', processedData);
           setCvData(processedData);
 
-          // Tamamlanmış bölümleri işaretle
+          // Tamamlanmış bölümleri işaretleme
           const completedSections = Object.entries(processedData).reduce((acc: string[], [key, value]) => {
             if (value !== null && 
                 (typeof value === 'string' || 
@@ -242,7 +259,7 @@ export default function CreateCV() {
             return acc;
           }, []);
 
-          console.log('Tamamlanmış bölümler:', completedSections); // Debug için
+          console.log('Tamamlanmış bölümler:', completedSections);
 
           setCvSections(prev => prev.map(section => ({
             ...section,
@@ -260,15 +277,20 @@ export default function CreateCV() {
     loadCV();
   }, [editId, user]);
 
-  const handleSaveSection = (sectionId: string, data: any) => {
+  const handleSaveSection = (sectionId: string, data: CVSectionData) => {
     setCvData(prev => ({
       ...prev,
       [sectionId]: data
     }));
 
-    setCvSections(prev => prev.map(section => 
-      section.id === sectionId ? { ...section, completed: true } : section
-    ));
+    // Bölümü tamamlandı olarak işaretle
+    setCvSections(prev =>
+      prev.map(section =>
+        section.id === sectionId ? { ...section, completed: true } : section
+      )
+    );
+
+    setActiveModal(null);
   };
 
   const handleCreateCV = async () => {
@@ -279,7 +301,7 @@ export default function CreateCV() {
     }
 
     try {
-      const updatedCvData: Partial<CVData> & { userId: string; updatedAt: any; createdAt?: any } = {
+      const updatedCvData: CVDataUpdate = {
         userId: user.uid,
         ...cvData,
         updatedAt: serverTimestamp(),
@@ -302,15 +324,19 @@ export default function CreateCV() {
   };
 
   const handleModalOpen = (sectionId: string) => {
+    if (!user) {
+      // Kullanıcı giriş yapmamışsa giriş modalını göster
+      router.push('/giris-yap?redirect=/cv-olustur');
+      return;
+    }
     setActiveModal(sectionId);
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Banner 
+      <BannerGray 
         title={isEditMode ? "CV Düzenle" : "CV Oluştur"} 
         description={isEditMode ? "CV'nizi düzenleyin" : "Profesyonel CV'nizi adım adım oluşturun"} 
-        imageSrc={BannerImage}
       />
 
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -371,7 +397,7 @@ export default function CreateCV() {
         </button>
       </div>
 
-      {/* Modal bileşenlerini ekleyelim */}
+      {/* Modal bileşenleri */}
       {activeModal === 'personal' && (
         <PersonalInfoModal
           isOpen={true}

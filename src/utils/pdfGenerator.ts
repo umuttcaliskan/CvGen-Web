@@ -2,7 +2,19 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { templates, TemplateId } from '@/templates';
 
-export async function generatePDF(cv: any, templateId: TemplateId, profileImageBase64: string | null) {
+interface CVData {
+  personal?: {
+    fullName: string;
+    // diğer alanlar...
+  };
+  // diğer CV bölümleri...
+}
+
+export async function generatePDF(
+  cv: CVData, 
+  templateId: TemplateId, 
+  profileImageBase64: string | null
+) {
   console.log('PDF oluşturmak için gelen veriler:', { cv, templateId, profileImageBase64: profileImageBase64 ? 'Mevcut' : 'Yok' });
 
   const template = templates[templateId];
@@ -108,7 +120,7 @@ export async function generatePDF(cv: any, templateId: TemplateId, profileImageB
     const canvas = await html2canvas(mainContainer as HTMLElement, {
       useCORS: true,
       allowTaint: true,
-      background: '#ffffff',
+      backgroundColor: '#ffffff',
       width: pageWidth * 3.779528,
       height: mainContainer.scrollHeight * 3.779528,
       logging: true
@@ -159,9 +171,9 @@ export async function generatePDF(cv: any, templateId: TemplateId, profileImageB
 
     pdf.save(fileName);
 
-  } catch (error) {
-    console.error('PDF oluşturma hatası:', error);
+  } catch {
+    console.error('PDF oluşturma hatası');
     document.body.removeChild(container);
-    throw error;
+    throw new Error('PDF oluşturma hatası');
   }
 } 

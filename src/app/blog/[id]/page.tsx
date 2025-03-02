@@ -1,33 +1,37 @@
-import React from 'react'
 import { db } from '@/firebaseConfig'
-import { doc, getDoc } from 'firebase/firestore'
+import { doc, getDoc, collection, getDocs } from 'firebase/firestore'
 import Image from 'next/image'
 import Link from 'next/link'
 import { FaArrowLeft, FaUser, FaClock } from 'react-icons/fa'
 import BannerImage from '@/assets/images/cvtemplate.webp'
 import ShareButtons from '@/components/ShareButtons'
 
-// Typescript için blog tipi tanımı
-interface BlogPost {
-  id: string;
-  title: string;
-  content: string;
-  topic: string;
-  imageUrl: string;
-  authorName: string;
-  createdAt: string;
+// Statik sayfa yenileme süresini ayarlıyoruz
+export const revalidate = 3600; // Her saat başı yenileme
+
+export async function generateStaticParams() {
+  const blogsRef = collection(db, 'blogs');
+  const snapshot = await getDocs(blogsRef);
+  
+  return snapshot.docs.map((doc) => ({
+    id: doc.id
+  }));
 }
 
-// Sayfa parametrelerinin tipi
-interface PageProps {
-  params: {
-    id: string;
-  }
-}
-
-async function BlogPost({ params }: PageProps) {
-  // Firestore'dan blog verisini çek
+export async function generateMetadata({ params }) {
   const blogDoc = await getDoc(doc(db, 'blogs', params.id));
+  const post = blogDoc.exists() ? blogDoc.data() : null;
+
+  return {
+    title: post?.title || 'Blog Yazısı',
+    description: post?.content?.substring(0, 160) || 'Blog içeriği'
+  };
+}
+
+const BlogPage = async ({ params }) => {
+  const { id } = params;
+  
+  const blogDoc = await getDoc(doc(db, 'blogs', id));
   
   if (!blogDoc.exists()) {
     return (
@@ -48,7 +52,7 @@ async function BlogPost({ params }: PageProps) {
   const post = {
     id: blogDoc.id,
     ...blogDoc.data()
-  } as BlogPost;
+  };
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -68,7 +72,7 @@ async function BlogPost({ params }: PageProps) {
               href="/blog"
               className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
             >
-              <FaArrowLeft /> Blog'a Dön
+              <FaArrowLeft /> Blog&apos;a Dön
             </Link>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               {post.title}
@@ -97,7 +101,6 @@ async function BlogPost({ params }: PageProps) {
       <div className="max-w-4xl mx-auto px-4 py-16">
         <article className="bg-white rounded-2xl shadow-sm p-8">
           <div className="prose prose-lg max-w-none">
-            {/* İçeriği paragraflara böl */}
             {post.content.split('\n').map((paragraph, index) => (
               <p key={index} className="mb-4">
                 {paragraph}
@@ -110,7 +113,7 @@ async function BlogPost({ params }: PageProps) {
         </article>
       </div>
     </main>
-  )
+  );
 }
 
-export default BlogPost 
+export default BlogPage; 

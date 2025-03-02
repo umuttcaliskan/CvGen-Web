@@ -4,23 +4,15 @@ import Image, { StaticImageData } from 'next/image';
 interface BannerProps {
   title: string;
   description: string;
-  imageSrc?: StaticImageData | string;
+  imageSrc?: StaticImageData;
 }
 
-const Banner: React.FC<BannerProps> = ({ title, description, imageSrc }) => {
+const BannerGray: React.FC<BannerProps> = ({ title, description, imageSrc }) => {
   return (
     <div className="relative">
       <div className="relative overflow-hidden bg-gradient-to-r from-primary to-primary/80 text-white py-16 px-4 sm:px-6 lg:px-8">
+        {/* Dekoratif arka plan deseni */}
         <div className="absolute inset-0 opacity-10">
-          {imageSrc && (
-            <Image
-              src={imageSrc}
-              alt={title}
-              fill
-              className="object-cover"
-              priority
-            />
-          )}
           <div className="absolute transform -rotate-45 translate-x-1/2 translate-y-1/2">
             {[...Array(5)].map((_, i) => (
               <div
@@ -58,7 +50,7 @@ const Banner: React.FC<BannerProps> = ({ title, description, imageSrc }) => {
         >
           <path 
             d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" 
-            className="fill-white"
+            className="fill-gray-50"
           />
         </svg>
       </div>
@@ -66,4 +58,4 @@ const Banner: React.FC<BannerProps> = ({ title, description, imageSrc }) => {
   );
 };
 
-export default Banner; 
+export default BannerGray; 

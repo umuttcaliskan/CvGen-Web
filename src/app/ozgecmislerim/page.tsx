@@ -10,8 +10,8 @@ import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from 'fireb
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
 import TemplateSelectModal from '@/components/TemplateSelectModal'
+import MobileApp from '@/components/HomeComponents/MobileApp'
 
-// CV tipi tanımı
 interface Resume {
   id: string;
   title: string;
@@ -86,13 +86,12 @@ function MyResumes() {
   // CV indirme işlemi
   const handleDownload = async (resumeId: string) => {
     try {
-      // Önce CV verilerini al
+      // Önce CV verilerini alma
       const cvDoc = await getDoc(doc(db, 'cvs', resumeId));
       if (!cvDoc.exists()) {
         throw new Error('CV bulunamadı');
       }
 
-      // Firestore'dan gelen veriyi doğru formata dönüştür
       const rawData = cvDoc.data();
       const cvData = {
         title: rawData.title || '',
@@ -106,9 +105,8 @@ function MyResumes() {
         certificates: Array.isArray(rawData.certificates) ? rawData.certificates : null
       };
 
-      console.log('İşlenmiş CV verileri:', cvData); // Debug için
+      console.log('İşlenmiş CV verileri:', cvData);
 
-      // CV verilerini state'e kaydet ve modal'ı aç
       setSelectedCvData(cvData);
       setSelectedResumeId(resumeId);
       setIsTemplateModalOpen(true);
@@ -118,9 +116,7 @@ function MyResumes() {
     }
   };
 
-  // handleTemplateSelect fonksiyonunu güncelle
   const handleTemplateSelect = async (templateId: string) => {
-    // Bu fonksiyon artık sadece şablon seçimi için kullanılacak
     console.log('Seçilen şablon:', templateId);
   };
 
@@ -204,6 +200,8 @@ function MyResumes() {
           </div>
         )}
       </div>
+
+      <MobileApp />
 
       <TemplateSelectModal
         isOpen={isTemplateModalOpen}

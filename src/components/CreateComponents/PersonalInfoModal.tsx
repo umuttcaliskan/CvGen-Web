@@ -3,49 +3,38 @@
 import React, { useState, useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
+import { PersonalInfo } from '@/types/cv';
 
 interface PersonalInfoModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: any) => void;
-  initialData: any;
+  onSave: (data: PersonalInfo) => void;
+  initialData: PersonalInfo | null;
 }
 
 const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({ isOpen, onClose, onSave, initialData }) => {
   const { user } = useAuth();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<PersonalInfo>({
+    id: initialData?.id || crypto.randomUUID(),
     fullName: initialData?.fullName || '',
-    email: initialData?.email || '',
+    email: initialData?.email || user?.email || '',
     phone: initialData?.phone || '',
     birthDate: initialData?.birthDate || '',
-    address: initialData?.address || '',
-    city: initialData?.city || '',
-    district: initialData?.district || '',
-    postalCode: initialData?.postalCode || '',
-    drivingLicense: initialData?.drivingLicense || '',
-    gender: initialData?.gender || '',
-    militaryStatus: initialData?.militaryStatus || '',
-    maritalStatus: initialData?.maritalStatus || ''
+    address: initialData?.address || ''
   });
 
   useEffect(() => {
     if (initialData) {
       setFormData({
+        id: initialData.id,
         fullName: initialData.fullName || '',
-        email: initialData.email || '',
+        email: initialData.email || user?.email || '',
         phone: initialData.phone || '',
         birthDate: initialData.birthDate || '',
-        address: initialData.address || '',
-        city: initialData.city || '',
-        district: initialData.district || '',
-        postalCode: initialData.postalCode || '',
-        drivingLicense: initialData.drivingLicense || '',
-        gender: initialData.gender || '',
-        militaryStatus: initialData.militaryStatus || '',
-        maritalStatus: initialData.maritalStatus || ''
+        address: initialData.address || ''
       });
     }
-  }, [initialData]);
+  }, [initialData, user?.email]);
 
   const handleSave = () => {
     onSave(formData);
@@ -136,105 +125,6 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({ isOpen, onClose, 
                 rows={3}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-transparent resize-none"
               />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Şehir
-                </label>
-                <input
-                  type="text"
-                  value={formData.city}
-                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                  placeholder="Şehir"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  İlçe
-                </label>
-                <input
-                  type="text"
-                  value={formData.district}
-                  onChange={(e) => setFormData({ ...formData, district: e.target.value })}
-                  placeholder="İlçe"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-transparent"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Posta Kodu
-              </label>
-              <input
-                type="text"
-                value={formData.postalCode}
-                onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
-                placeholder="Posta Kodu"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-transparent"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Ehliyet
-              </label>
-              <input
-                type="text"
-                value={formData.drivingLicense}
-                onChange={(e) => setFormData({ ...formData, drivingLicense: e.target.value })}
-                placeholder="Ehliyet Bilgisi"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-transparent"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cinsiyet
-              </label>
-              <select
-                value={formData.gender}
-                onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-transparent"
-              >
-                <option value="">Seçiniz</option>
-                <option value="Erkek">Erkek</option>
-                <option value="Kadın">Kadın</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Askerlik Durumu
-              </label>
-              <select
-                value={formData.militaryStatus}
-                onChange={(e) => setFormData({ ...formData, militaryStatus: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-transparent"
-              >
-                <option value="">Seçiniz</option>
-                <option value="Yapıldı">Yapıldı</option>
-                <option value="Muaf">Muaf</option>
-                <option value="Tecilli">Tecilli</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Medeni Durum
-              </label>
-              <select
-                value={formData.maritalStatus}
-                onChange={(e) => setFormData({ ...formData, maritalStatus: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-transparent"
-              >
-                <option value="">Seçiniz</option>
-                <option value="Bekar">Bekar</option>
-                <option value="Evli">Evli</option>
-              </select>
             </div>
           </div>
         </div>

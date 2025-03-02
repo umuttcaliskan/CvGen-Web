@@ -12,7 +12,6 @@ export const templates = {
   minimalist: minimalistTemplate,
   feminine: feminineTemplate,
   elegant: elegantTemplate,
-  // Diğer şablonlar buraya eklenebilir
 };
 
 export const templateList = [
@@ -46,4 +45,35 @@ export const templateList = [
     description: 'Şık ve profesyonel görünümlü CV şablonu',
     image: '/templates/elegant.png'
   }
-]; 
+];
+
+interface CVSection {
+  title: string;
+  items: Array<{
+    id: string;
+    [key: string]: unknown;
+  }>;
+}
+
+interface CVData {
+  personal: {
+    fullName: string;
+    email: string;
+    phone: string;
+    // diğer alanlar...
+  };
+  education?: CVSection;
+  experience?: CVSection;
+  skills?: CVSection;
+  // diğer bölümler...
+}
+
+// Her template dosyasında bu interface'i kullan
+export function generateHTML(cv: CVData, profileImage: string | null, templateId: TemplateId = 'modern'): string {
+  const selectedTemplate = templates[templateId];
+  if (!selectedTemplate || typeof selectedTemplate.generateHTML !== 'function') {
+    throw new Error(`Template '${templateId}' bulunamadı veya geçerli değil`);
+  }
+  
+  return selectedTemplate.generateHTML(cv, profileImage);
+} 

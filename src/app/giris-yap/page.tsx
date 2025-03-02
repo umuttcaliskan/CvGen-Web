@@ -3,14 +3,17 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from '@/firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import Link from 'next/link';
 
 const SignInPage: React.FC = () => {
   const { user, login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,19 +22,17 @@ const SignInPage: React.FC = () => {
       const user = userCredential.user;
       console.log('Giriş başarılı:', user);
       login(user);
-      router.push('/');
+      router.push(redirect || '/');
     } catch (error) {
       console.error('Giriş hatası:', error);
     }
   };
 
-  // Kullanıcı giriş kontrolü
   useEffect(() => {
     if (user) {
-      // Kullanıcı zaten giriş yapmışsa yönlendirme yapabilirsiniz
-      router.push('/'); // Kullanıcıyı anasayfaya yönlendir
+      router.push(redirect || '/');
     }
-  }, [user, router]); // user ve router değiştiğinde çalışır
+  }, [user, router, redirect]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -67,6 +68,12 @@ const SignInPage: React.FC = () => {
             Giriş Yap
           </button>
         </form>
+        <div className="mt-6 text-center text-sm text-gray-600">
+          Hesabınız yok mu?{' '}
+          <Link href="/kayit-ol" className="text-primary hover:text-primary/80 font-medium">
+            Hemen Kayıt Olun
+          </Link>
+        </div>
       </div>
     </div>
   );

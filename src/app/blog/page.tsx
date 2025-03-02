@@ -1,12 +1,11 @@
 import React from 'react'
-import Banner from '@/components/Banner'
+import BannerGray from '@/components/BannerGray'
 import BannerImage from '@/assets/images/cvtemplate.webp'
 import Image from 'next/image'
 import Link from 'next/link'
 import { db } from '@/firebaseConfig'
 import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 
-// Typescript için blog tipi tanımı
 interface BlogPost {
   id: string;
   title: string;
@@ -17,9 +16,7 @@ interface BlogPost {
   createdAt: string;
 }
 
-// Next.js 13+ için async component
 async function Blog() {
-  // Firestore'dan blog verilerini çek
   const blogsQuery = query(
     collection(db, 'blogs'),
     orderBy('createdAt', 'desc')
@@ -33,7 +30,7 @@ async function Blog() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      <Banner 
+      <BannerGray 
         title="Blog" 
         description="CV hazırlama ve kariyer gelişimi hakkında faydalı içerikler" 
         imageSrc={BannerImage}

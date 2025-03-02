@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, useRef } from 'react'
 import Banner from '@/components/Banner'
-import BannerImage from '@/assets/images/iletisim.png'
 import { useAuth } from '@/context/AuthContext'
 import { FaUser, FaEnvelope, FaCalendar, FaSignOutAlt, FaCamera } from 'react-icons/fa'
 import { db, auth, storage } from '@/firebaseConfig'
@@ -11,6 +10,19 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Modal from '@/components/Modal'
+
+interface UserProfile {
+  fullName: string;
+  email: string;
+  birthDate: string;
+  [key: string]: any;  // Firestore için index signature ekleyin
+}
+
+interface PasswordData {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
 
 function Account() {
   const { user } = useAuth();
@@ -31,7 +43,6 @@ function Account() {
   const [modalContent, setModalContent] = useState('');
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -51,7 +62,7 @@ function Account() {
             email: user.email || ""
           } as any);
           
-          // Profil resmini kontrol et
+          // Profil resmini kontrol etme
           if (userData.profileImage) {
             try {
               const imageUrl = await getDownloadURL(ref(storage, userData.profileImage));
@@ -77,8 +88,15 @@ function Account() {
     }
   };
 
-  const handleUpdateProfile = () => {
-    openModal('Profil bilgilerinizi güncellemek için gerekli alanları doldurun.');
+  const handleUpdateProfile = async (data: UserProfile) => {
+    try {
+      if (!user) return;
+      const updateData = { ...data } as { [key: string]: any };
+      await updateDoc(doc(db, 'users', user.uid), updateData);
+      setUserDetails(prev => ({ ...prev, ...data }));
+    } catch (error) {
+      console.error('Profil güncelleme hatası:', error);
+    }
   };
 
   const handleNotificationSettings = async (e: React.FormEvent) => {
@@ -101,14 +119,14 @@ function Account() {
     }
   };
 
-  const handleChangePassword = () => {
-    setIsChangePasswordOpen(true); // Şifre değiştirme modalını aç
+  const handleChangePassword = async (data: PasswordData) => {
+    // fonksiyonu kullanın veya kaldırın
   };
 
   const handleDeleteAccount = async () => {
     if (!user) {
       console.error('Kullanıcı mevcut değil.');
-      return; // Kullanıcı yoksa işlemi durdur
+      return;
     }
     
     try {
@@ -156,7 +174,7 @@ function Account() {
     }
   };
 
-  // Baş harfi göstermek için yardımcı fonksiyon
+  // Baş harfi göstermek için
   const getInitial = () => {
     return userDetails.fullName ? userDetails.fullName.charAt(0).toUpperCase() : '?';
   };
@@ -173,13 +191,11 @@ function Account() {
 
   const handleProfileUpdate = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle profile update logic here
     setIsEditProfileOpen(false);
   };
 
   const handlePasswordChange = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle password change logic here
     setIsChangePasswordOpen(false);
   };
 
@@ -188,7 +204,6 @@ function Account() {
       <Banner 
         title="Hesabım" 
         description="Hesap bilgilerinizi görüntüleyin ve düzenleyin." 
-        imageSrc={BannerImage}
       />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -211,7 +226,7 @@ function Account() {
                 </div>
               )}
               
-              {/* Kamera ikonu overlay */}
+              {/* Kamera ikonu */}
               <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 {isUploading ? (
                   <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />

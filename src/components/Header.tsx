@@ -82,7 +82,7 @@ export default function Header() {
               </Link>
               <Link
                 href="/kayit-ol"
-                className="bg-foreground text-background px-4 py-2 rounded-md hover:bg-foreground/90 transition-colors"
+                className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors"
               >
                 Kayıt Ol
               </Link>
@@ -145,7 +145,7 @@ export default function Header() {
                     </Link>
                     <Link
                       href="/kayit-ol"
-                      className="text-center bg-foreground text-background py-2 rounded-md hover:bg-foreground/90 transition-colors"
+                      className="text-center bg-black text-white py-2 rounded-md hover:bg-gray-800 transition-colors"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       Kayıt Ol

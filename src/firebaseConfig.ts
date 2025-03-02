@@ -13,10 +13,8 @@ const firebaseConfig = {
   measurementId: "G-X6Z55TCGQK"
 };
 
-// Firebase'i başlat
 const app = initializeApp(firebaseConfig);
 
-// Firestore ve Auth nesnelerini oluştur
 const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
