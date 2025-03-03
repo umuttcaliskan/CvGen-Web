@@ -260,7 +260,6 @@ function MyResumes() {
         )}
       </div>
 
-      {/* Önce MobileApp bileşenini, sonra diğer modalları yerleştirelim */}
       <MobileApp />
 
       {/* Sabit konumlandırılmış Hata Bildir butonu */}

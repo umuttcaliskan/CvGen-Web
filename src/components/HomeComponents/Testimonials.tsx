@@ -30,7 +30,7 @@ const testimonials = [
   {
     name: "Can Demir",
     role: "Bilgisayar Mühendisliği Öğrencisi, İTÜ",
-    comment: "Staj başvuruları için profesyonel görünümlü bir CV'ye ihtiyacım vardı ama bütçem kısıtlıydı. CvGen'in öğrenci planı tam bana göre! Üstelik GitHub entegrasyonu sayesinde projelerimi otomatik olarak CV'me ekleyebiliyorum."
+    comment: "Staj başvuruları için profesyonel görünümlü bir CV'ye ihtiyacım vardı ama bütçem kısıtlıydı. CvGen tamamen ücretsiz! Üstelik GitHub entegrasyonu sayesinde projelerimi otomatik olarak CV'me ekleyebiliyorum."
   },
   {
     name: "Elif Tekin",

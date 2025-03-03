@@ -11,7 +11,7 @@ export default function MobileApp() {
   return (
     <section className="py-24 bg-gradient-to-br from-primary/5 to-primary/10">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="grid md:grid-cols-2 gap-12 items-center flex flex-col-reverse md:flex-row">
+        <div className="grid md:grid-cols-2 gap-12 items-center flex-col-reverse md:flex-row">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
