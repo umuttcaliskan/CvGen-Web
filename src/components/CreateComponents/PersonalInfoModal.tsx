@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 import { PersonalInfo } from '@/types/cv';
+import { generateUUID } from '@/utils/uuid';
 
 interface PersonalInfoModalProps {
   isOpen: boolean;
@@ -15,7 +16,7 @@ interface PersonalInfoModalProps {
 const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({ isOpen, onClose, onSave, initialData }) => {
   const { user } = useAuth();
   const [formData, setFormData] = useState<PersonalInfo>({
-    id: initialData?.id || crypto.randomUUID(),
+    id: initialData?.id || generateUUID(),
     fullName: initialData?.fullName || '',
     email: initialData?.email || user?.email || '',
     phone: initialData?.phone || '',

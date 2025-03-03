@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Banner from '@/components/Banner'
 import BannerImage from '@/assets/images/cvtemplate.webp'
-import { FaPlus, FaDownload, FaEdit, FaTrash } from 'react-icons/fa'
+import { FaPlus, FaDownload, FaEdit, FaTrash, FaEye, FaFileAlt, FaUser, FaLanguage, FaAward, FaEnvelope, FaPhone, FaExternalLinkAlt, FaProjectDiagram, FaGraduationCap, FaBriefcase, FaTools, FaUserCheck, FaGlobe, FaBug } from 'react-icons/fa'
 import Link from 'next/link'
 import { db } from '@/firebaseConfig'
 import { collection, query, where, getDocs, deleteDoc, doc, getDoc } from 'firebase/firestore'
@@ -11,6 +11,8 @@ import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
 import TemplateSelectModal from '@/components/TemplateSelectModal'
 import MobileApp from '@/components/HomeComponents/MobileApp'
+import ViewCVModal from '@/components/ViewCVModal'
+import ReportBugModal from '@/components/ReportBugModal'
 
 interface Resume {
   id: string;
@@ -28,6 +30,9 @@ function MyResumes() {
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [selectedResumeId, setSelectedResumeId] = useState<string | null>(null);
   const [selectedCvData, setSelectedCvData] = useState<any>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [viewCvData, setViewCvData] = useState<any>(null);
+  const [isReportBugModalOpen, setIsReportBugModalOpen] = useState(false);
 
   // CV'leri Firestore'dan çek
   useEffect(() => {
@@ -102,7 +107,9 @@ function MyResumes() {
         skills: Array.isArray(rawData.skills) ? rawData.skills : null,
         languages: Array.isArray(rawData.languages) ? rawData.languages : null,
         references: Array.isArray(rawData.references) ? rawData.references : null,
-        certificates: Array.isArray(rawData.certificates) ? rawData.certificates : null
+        certificates: Array.isArray(rawData.certificates) ? rawData.certificates : null,
+        projects: Array.isArray(rawData.projects) ? rawData.projects : null,
+        socialMedia: Array.isArray(rawData.socialMedia) ? rawData.socialMedia : null
       };
 
       console.log('İşlenmiş CV verileri:', cvData);
@@ -117,7 +124,45 @@ function MyResumes() {
   };
 
   const handleTemplateSelect = async (templateId: string) => {
-    console.log('Seçilen şablon:', templateId);
+    try {
+      console.log('Seçilen şablon:', templateId);
+      
+      if (!selectedResumeId || !selectedCvData) {
+        throw new Error('CV verileri bulunamadı');
+      }
+      
+      // Burada seçilen şablona göre PDF veya DOCX oluşturma işlemi yapılabilir
+      // Örnek basit bir mesaj gösterimi:
+      alert(`${selectedCvData.title || 'CV'} başlıklı özgeçmişiniz ${templateId} şablonu ile hazırlanıyor...`);
+      
+      // İndirme işlemi burada gerçekleştirilecek
+      // NOT: Gerçek uygulamada, bu işlem için bir API çağrısı yapılabilir
+      // veya client-side PDF oluşturma kütüphanesi kullanılabilir
+      
+      setIsTemplateModalOpen(false);
+      setSelectedCvData(null);
+      setSelectedResumeId(null);
+    } catch (error) {
+      console.error('CV indirme hatası:', error);
+      alert('CV indirme sırasında bir hata oluştu');
+    }
+  };
+
+  // CV görüntüleme işlemi
+  const handleViewResume = async (resumeId: string) => {
+    try {
+      const cvDoc = await getDoc(doc(db, 'cvs', resumeId));
+      if (!cvDoc.exists()) {
+        throw new Error('CV bulunamadı');
+      }
+
+      const rawData = cvDoc.data();
+      setViewCvData(rawData);
+      setIsViewModalOpen(true);
+    } catch (error) {
+      console.error('CV verilerini alma hatası:', error);
+      alert('CV verileri alınırken bir hata oluştu');
+    }
   };
 
   if (loading) {
@@ -129,7 +174,7 @@ function MyResumes() {
   }
 
   return (
-    <div>
+    <div className="relative">
       <Banner 
         title="Özgeçmişlerim" 
         description="Oluşturduğunuz tüm CV'lerinizi buradan yönetebilirsiniz." 
@@ -172,28 +217,42 @@ function MyResumes() {
                   <p>Şablon: {resume.template}</p>
                 </div>
                 
-                <div className="flex gap-2">
-                  <button 
-                    className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1.5 rounded hover:bg-primary/20 transition-colors"
-                    onClick={() => handleDownload(resume.id)}
-                  >
-                    <FaDownload className="text-sm" />
-                    İndir
-                  </button>
-                  <Link 
-                    href={`/cv-olustur?edit=${resume.id}`}
-                    className="flex items-center gap-1 bg-yellow-500/10 text-yellow-600 px-3 py-1.5 rounded hover:bg-yellow-500/20 transition-colors"
-                  >
-                    <FaEdit className="text-sm" />
-                    Düzenle
-                  </Link>
-                  <button 
-                    onClick={() => handleDeleteResume(resume.id)}
-                    className="flex items-center gap-1 bg-red-500/10 text-red-600 px-3 py-1.5 rounded hover:bg-red-500/20 transition-colors"
-                  >
-                    <FaTrash className="text-sm" />
-                    Sil
-                  </button>
+                <div className="flex flex-col gap-3">
+                  {/* Ana işlemler - Daha belirgin butonlar */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link 
+                      href={`/cv-olustur?edit=${resume.id}`}
+                      className="flex items-center justify-center gap-1.5 bg-primary text-white px-3 py-2 rounded-md hover:bg-primary/90 transition-all font-medium text-sm"
+                    >
+                      <FaEdit className="text-sm" />
+                      Düzenle
+                    </Link>
+                    <button 
+                      className="flex items-center justify-center gap-1.5 bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 transition-all font-medium text-sm"
+                      onClick={() => handleViewResume(resume.id)}
+                    >
+                      <FaEye className="text-sm" />
+                      Görüntüle
+                    </button>
+                  </div>
+                  
+                  {/* İkincil işlemler - Daha az belirgin butonlar */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <button 
+                      className="flex items-center justify-center gap-1.5 bg-gray-100 text-gray-700 px-3 py-2 rounded-md hover:bg-gray-200 transition-all text-sm"
+                      onClick={() => handleDownload(resume.id)}
+                    >
+                      <FaDownload className="text-sm" />
+                      İndir
+                    </button>
+                    <button 
+                      onClick={() => handleDeleteResume(resume.id)}
+                      className="flex items-center justify-center gap-1.5 bg-gray-100 text-red-600 px-3 py-2 rounded-md hover:bg-red-50 hover:border-red-200 transition-all text-sm"
+                    >
+                      <FaTrash className="text-sm" />
+                      Sil
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -201,7 +260,31 @@ function MyResumes() {
         )}
       </div>
 
+      {/* Önce MobileApp bileşenini, sonra diğer modalları yerleştirelim */}
       <MobileApp />
+
+      {/* Sabit konumlandırılmış Hata Bildir butonu */}
+      <button
+        onClick={() => setIsReportBugModalOpen(true)}
+        className="fixed bottom-6 right-6 bg-white shadow-lg border border-gray-200 text-gray-700 py-3 px-5 rounded-full font-medium hover:bg-gray-50 transition-colors flex items-center gap-2 z-10"
+      >
+        <FaBug className="text-red-500" />
+        Hata Bildir
+      </button>
+
+      {/* CV Görüntüleme Modalı */}
+      {isViewModalOpen && viewCvData && (
+        <ViewCVModal
+          isOpen={isViewModalOpen}
+          onClose={() => setIsViewModalOpen(false)}
+          viewCvData={viewCvData}
+        />
+      )}
+
+      <ReportBugModal
+        isOpen={isReportBugModalOpen}
+        onClose={() => setIsReportBugModalOpen(false)}
+      />
 
       <TemplateSelectModal
         isOpen={isTemplateModalOpen}

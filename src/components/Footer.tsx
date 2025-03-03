@@ -122,22 +122,22 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4">CV Örnekleri</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/cv-ornek1" className="text-white/90 hover:text-white transition-colors text-sm">
+                <Link href="/sablonlar" className="text-white/90 hover:text-white transition-colors text-sm">
                   Yazılım Geliştirici CV Örneği
                 </Link>
               </li>
               <li>
-                <Link href="/cv-ornek2" className="text-white/90 hover:text-white transition-colors text-sm">
+                <Link href="/sablonlar" className="text-white/90 hover:text-white transition-colors text-sm">
                   Öğretmen CV Örneği
                 </Link>
               </li>
               <li>
-                <Link href="/cv-ornek3" className="text-white/90 hover:text-white transition-colors text-sm">
+                <Link href="/sablonlar" className="text-white/90 hover:text-white transition-colors text-sm">
                   Grafik Tasarımcı CV Örneği
                 </Link>
               </li>
               <li>
-                <Link href="/cv-ornekleri" className="text-white/90 hover:text-white transition-colors text-sm">
+                <Link href="/sablonlar" className="text-white/90 hover:text-white transition-colors text-sm">
                   Tüm CV Örnekleri →
                 </Link>
               </li>

@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore';
+
 export interface BaseSection {
   id: string;
   [key: string]: any;
@@ -50,16 +52,33 @@ export interface Reference extends BaseSection {
   email: string;
 }
 
+export interface SocialMedia extends BaseSection {
+  platform: string;
+  username: string;
+  url?: string;
+}
+
+export interface Project extends BaseSection {
+  name: string;
+  startDate: string;
+  endDate: string;
+  description: string;
+  technologies?: string;
+  projectUrl?: string;
+}
+
 export interface CVData {
   title: string;
   personal: PersonalInfo | null;
   about: string | null;
   education: Education[] | null;
-  certificates: Certificate[] | null;
   experience: Experience[] | null;
   skills: Skill[] | null;
   languages: Language[] | null;
   references: Reference[] | null;
+  socialMedia: SocialMedia[] | null;
+  projects: Project[] | null;
+  certificates: Certificate[] | null;
 }
 
 export type CVSectionData = any; 

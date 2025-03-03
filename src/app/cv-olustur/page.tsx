@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import BannerGray from '@/components/BannerGray';
-import { FaUser, FaFileAlt, FaGraduationCap, FaCertificate, FaBriefcase, FaStar, FaGlobe, FaUsers, FaCheck, FaChevronRight } from 'react-icons/fa';
+import { FaUser, FaFileAlt, FaGraduationCap, FaCertificate, FaBriefcase, FaStar, FaGlobe, FaUsers, FaCheck, FaChevronRight, FaBug } from 'react-icons/fa';
 import { db } from '@/firebaseConfig';
 import { collection, addDoc, updateDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -15,8 +15,12 @@ import LanguagesModal from '@/components/CreateComponents/LanguagesModal';
 import PersonalInfoModal from '@/components/CreateComponents/PersonalInfoModal';
 import ReferencesModal from '@/components/CreateComponents/ReferencesModal';
 import SkillsModal from '@/components/CreateComponents/SkillsModal';
+import ProjectsModal from '@/components/CreateComponents/ProjectsModal';
+import SocialMediaModal from '@/components/CreateComponents/SocialMediaModal';
 import { FieldValue } from 'firebase/firestore';
 import { CVData, CVSectionData } from '@/types/cv';
+import { generateUUID } from '@/utils/uuid';
+import ReportBugModal from '@/components/ReportBugModal';
 
 interface CVSection {
   id: string;
@@ -78,6 +82,21 @@ interface Reference extends BaseSection {
   email: string;
 }
 
+interface Project extends BaseSection {
+  name: string;
+  startDate: string;
+  endDate: string;
+  description: string;
+  technologies?: string;
+  projectUrl?: string;
+}
+
+interface SocialMedia extends BaseSection {
+  platform: string;
+  username: string;
+  url?: string;
+}
+
 interface CVDataUpdate {
   userId: string;
   updatedAt: FieldValue;
@@ -103,6 +122,7 @@ export default function CreateCV() {
   const searchParams = useSearchParams();
   const editId = searchParams.get('edit');
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isReportBugModalOpen, setIsReportBugModalOpen] = useState(false);
   
   const [cvSections, setCvSections] = useState<CVSection[]>([
     {
@@ -160,6 +180,20 @@ export default function CreateCV() {
       icon: <FaUsers className="text-xl" />,
       description: 'Referans olarak gösterebileceğiniz kişiler',
       completed: false
+    },
+    {
+      id: 'projects',
+      title: 'Projelerim',
+      icon: <FaFileAlt className="text-xl" />,
+      description: 'Geliştirdiğiniz projeler ve detayları',
+      completed: false
+    },
+    {
+      id: 'socialMedia',
+      title: 'Sosyal Medya Hesaplarım',
+      icon: <FaGlobe className="text-xl" />,
+      description: 'Sosyal medya hesaplarınız ve bağlantıları',
+      completed: false
     }
   ]);
 
@@ -172,7 +206,9 @@ export default function CreateCV() {
     experience: null,
     skills: null,
     languages: null,
-    references: null
+    references: null,
+    projects: null,
+    socialMedia: null
   });
 
   // CV verilerini yükleme
@@ -185,7 +221,9 @@ export default function CreateCV() {
         if (cvDoc.exists()) {
           const data = cvDoc.data();
           console.log('Firestore\'dan gelen ham veri:', data);
-
+          console.log("Projeler ham veri:", JSON.stringify(data.projects));
+          console.log("Sosyal medya ham veri:", JSON.stringify(data.socialMedia));
+          
           const processedData: CVData = {
             title: data.title || 'İsimsiz CV',
             personal: data.personal ? {
@@ -200,7 +238,7 @@ export default function CreateCV() {
             about: typeof data.about === 'string' ? data.about : null,
             
             education: Array.isArray(data.education) ? data.education.map(edu => ({
-              id: edu.id || crypto.randomUUID(),
+              id: edu.id || generateUUID(),
               schoolName: edu.schoolName || '',
               department: edu.department || '',
               startDate: edu.startDate || '',
@@ -208,14 +246,14 @@ export default function CreateCV() {
             })) : null,
             
             certificates: Array.isArray(data.certificates) ? data.certificates.map(cert => ({
-              id: cert.id || crypto.randomUUID(),
+              id: cert.id || generateUUID(),
               name: cert.name || '',
               institution: cert.institution || '',
               date: cert.date || ''
             })) : null,
             
             experience: Array.isArray(data.experience) ? data.experience.map(exp => ({
-              id: exp.id || crypto.randomUUID(),
+              id: exp.id || generateUUID(),
               companyName: exp.companyName || '',
               position: exp.position || '',
               startDate: exp.startDate || '',
@@ -224,25 +262,48 @@ export default function CreateCV() {
             })) : null,
             
             skills: Array.isArray(data.skills) ? data.skills.map(skill => ({
-              id: skill.id || crypto.randomUUID(),
+              id: skill.id || generateUUID(),
               name: skill.name || '',
               level: skill.level || ''
             })) : null,
             
             languages: Array.isArray(data.languages) ? data.languages.map(lang => ({
-              id: lang.id || crypto.randomUUID(),
+              id: lang.id || generateUUID(),
               name: lang.name || '',
               level: lang.level || ''
             })) : null,
             
             references: Array.isArray(data.references) ? data.references.map(ref => ({
-              id: ref.id || crypto.randomUUID(),
+              id: ref.id || generateUUID(),
               fullName: ref.fullName || '',
               company: ref.company || '',
               position: ref.position || '',
               phone: ref.phone || '',
               email: ref.email || ''
-            })) : null
+            })) : null,
+            
+            projects: Array.isArray(data.projects) ? data.projects.map(project => {
+              console.log("İşlenen proje:", JSON.stringify(project));
+              return {
+                id: project.id || generateUUID(),
+                name: project.name || '',
+                startDate: project.startDate || '',
+                endDate: project.endDate || '',
+                description: project.description || '',
+                technologies: project.technologies || '',
+                projectUrl: project.projectUrl || ''
+              };
+            }) : null,
+            
+            socialMedia: Array.isArray(data.socialMedia) ? data.socialMedia.map(social => {
+              console.log("İşlenen sosyal medya:", JSON.stringify(social));
+              return {
+                id: social.id || generateUUID(),
+                platform: social.platform || '',
+                username: social.username || '',
+                url: social.url || ''
+              };
+            }) : null
           };
 
           console.log('İşlenmiş veri:', processedData);
@@ -333,7 +394,7 @@ export default function CreateCV() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 relative">
       <BannerGray 
         title={isEditMode ? "CV Düzenle" : "CV Oluştur"} 
         description={isEditMode ? "CV'nizi düzenleyin" : "Profesyonel CV'nizi adım adım oluşturun"} 
@@ -396,6 +457,15 @@ export default function CreateCV() {
           {isEditMode ? 'CV Güncelle' : 'CV Oluştur'}
         </button>
       </div>
+
+      {/* Sabit konumlandırılmış Hata Bildir butonu */}
+      <button
+        onClick={() => setIsReportBugModalOpen(true)}
+        className="fixed bottom-6 right-6 bg-white shadow-lg border border-gray-200 text-gray-700 py-3 px-5 rounded-full font-medium hover:bg-gray-50 transition-colors flex items-center gap-2 z-10"
+      >
+        <FaBug className="text-red-500" />
+        Hata Bildir
+      </button>
 
       {/* Modal bileşenleri */}
       {activeModal === 'personal' && (
@@ -462,6 +532,27 @@ export default function CreateCV() {
           initialData={cvData.skills}
         />
       )}
+      {activeModal === 'projects' && (
+        <ProjectsModal
+          isOpen={true}
+          onClose={() => setActiveModal(null)}
+          onSave={(data) => handleSaveSection('projects', data)}
+          initialData={cvData.projects}
+        />
+      )}
+      {activeModal === 'socialMedia' && (
+        <SocialMediaModal
+          isOpen={true}
+          onClose={() => setActiveModal(null)}
+          onSave={(data) => handleSaveSection('socialMedia', data)}
+          initialData={cvData.socialMedia}
+        />
+      )}
+      
+      <ReportBugModal 
+        isOpen={isReportBugModalOpen} 
+        onClose={() => setIsReportBugModalOpen(false)} 
+      />
     </div>
   );
 }

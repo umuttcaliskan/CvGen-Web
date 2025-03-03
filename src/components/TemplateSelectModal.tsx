@@ -1,211 +1,312 @@
-import React, { useState, useEffect } from 'react';
-import { FaTimes, FaDownload } from 'react-icons/fa';
-import Image, { StaticImageData } from 'next/image';
-import CvImage from '@/assets/images/templates/cv3.png';
-import { generatePDF } from '@/utils/pdfGenerator';
-import { useAuth } from '@/context/AuthContext';
-import { getDownloadURL, ref, getStorage } from 'firebase/storage';
-import { TemplateId, templateList } from '@/templates';
-import { getDoc, doc } from 'firebase/firestore';
-import { db } from '@/firebaseConfig';
-
-interface Template {
-  id: string;
-  name: string;
-  image: StaticImageData;
-  thumbnail: StaticImageData;
-}
+import React, { useState, useEffect } from 'react'
+import { FaTimes, FaDownload, FaCheck, FaFilePdf, FaFileWord } from 'react-icons/fa'
+import Image from 'next/image'
+import { generatePDFFromHTML } from '@/services/pdf-service'
+import isDunyasiImage from '@/assets/images/templates/corporate.png'
+import dijitalGecisImage from '@/assets/images/templates/atsUyumlu.png'
+import ozVeNetImage from '@/assets/images/templates/minimalist.png'
+import novaImage from '@/assets/images/templates/whiteTwoColumn.png'
+import geceMavisiImage from '@/assets/images/templates/darkmodern.png'
+import baharEsintisiImage from '@/assets/images/templates/greenModern.png'
+import toprakTonuImage from '@/assets/images/templates/elite.png'
+import kariyerOdakliImage from '@/assets/images/templates/professional.png'
+import maviUfuklarImage from '@/assets/images/templates/modern.png'
+import inceDetayImage from '@/assets/images/templates/elegant.png'
+import yalinZarafetImage from '@/assets/images/templates/feminine.png'
+import kristalNetlikImage from '@/assets/images/templates/crystal.png'
+import { templateMapping } from '@/templates'
+import { ref, getDownloadURL } from 'firebase/storage'
+import { storage } from '@/firebaseConfig'
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '@/firebaseConfig'
+import { useAuth } from '@/context/AuthContext'
 
 interface TemplateSelectModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectTemplate: (templateId: string) => void;
-  cvData: any; // CV verisi
+  cvData: any;
 }
 
-const templates: Template[] = templateList.map(template => ({
-  id: template.id,
-  name: template.name,
-  image: CvImage,
-  thumbnail: CvImage
-}));
+const templates = [
+  { id: 'is-dunyasi', name: 'İş Dünyası', image: isDunyasiImage },
+  { id: 'dijital-gecis', name: 'Dijital Geçiş', image: dijitalGecisImage },
+  { id: 'oz-ve-net', name: 'Öz ve Net', image: ozVeNetImage },
+  { id: 'nova', name: 'Nova', image: novaImage },
+  { id: 'gece-mavisi', name: 'Gece Mavisi', image: geceMavisiImage },
+  { id: 'bahar-esintisi', name: 'Bahar Esintisi', image: baharEsintisiImage },
+  { id: 'toprak-tonu', name: 'Toprak Tonu', image: toprakTonuImage },
+  { id: 'kariyer-odakli', name: 'Kariyer Odaklı', image: kariyerOdakliImage },
+  { id: 'mavi-ufuklar', name: 'Mavi Ufuklar', image: maviUfuklarImage },
+  { id: 'ince-detay', name: 'İnce Detay', image: inceDetayImage },
+  { id: 'yalin-zarafet', name: 'Yalın Zarafet', image: yalinZarafetImage },
+  { id: 'kristal-netlik', name: 'Kristal Netlik', image: kristalNetlikImage },
+]
 
-const TemplateSelectModal: React.FC<TemplateSelectModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  onSelectTemplate,
-  cvData 
-}) => {
-  const [selectedId, setSelectedId] = useState<string>('modern');
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const { user } = useAuth();
-  const storage = getStorage();
+// İndirme formatları
+const downloadFormats = [
+  { id: 'pdf', name: 'PDF', icon: <FaFilePdf className="mr-2" /> },
+  { id: 'docx', name: 'Word (DOCX)', icon: <FaFileWord className="mr-2" /> },
+]
 
-  // Kullanıcının profil resmini yükle
-  useEffect(() => {
-    const loadProfileImage = async () => {
-      if (!user?.uid) return;
+// Firebase Storage'dan profil resmini direkt olarak yükleyen fonksiyon
+const fetchProfileImageFromFirebase = async (currentUser: any): Promise<string | null> => {
+  try {
+    if (!currentUser || !currentUser.uid) {
+      console.log("Kullanıcı oturumu yok, profil resmi alınamıyor");
+      return null;
+    }
+
+    // Firestore'dan kullanıcı profil bilgilerini al
+    const userDocRef = doc(db, "users", currentUser.uid);
+    const userDoc = await getDoc(userDocRef);
+    
+    if (!userDoc.exists() || !userDoc.data().profileImage) {
+      console.log("Kullanıcı profil resmi yok");
+      return null;
+    }
+    
+    // Storage referansını al
+    const storageRef = ref(storage, userDoc.data().profileImage);
+    
+    try {
+      // URL'yi getir
+      const url = await getDownloadURL(storageRef);
+      console.log("Profil resmi URL başarıyla alındı:", url);
       
+      // Mevcut API endpoint'ini kullanarak resmi indir
       try {
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        if (!userDoc.exists()) {
-          console.log('Kullanıcı belgesi bulunamadı');
-          setProfileImage(null);
-          return;
-        }
-
-        const userData = userDoc.data();
-        if (!userData.profileImage) {
-          console.log('Profil resmi yolu bulunamadı');
-          setProfileImage(null);
-          return;
-        }
-
-        // Storage'dan profil resmini al
-        const imageRef = ref(storage, userData.profileImage);
-        const url = await getDownloadURL(imageRef);
-        
-        console.log('Profil resmi URL:', url);
-        
-        // API route üzerinden resmi al
         const response = await fetch('/api/get-profile-image', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ imageUrl: url }),
+          body: JSON.stringify({ imageUrl: url })
         });
-
-        if (!response.ok) {
-          throw new Error('Resim indirilemedi');
-        }
-
-        const data = await response.json();
         
-        if (data.error) {
-          throw new Error(data.error);
+        if (!response.ok) {
+          throw new Error('API hatası: ' + response.status);
         }
+        
+        const data = await response.json();
+        if (data.imageData) {
+          console.log("Resim API üzerinden base64 olarak alındı");
+          return data.imageData; // dataURL formatında image dönüyor
+        } else {
+          throw new Error('Resim verisi alınamadı');
+        }
+      } catch (apiError) {
+        console.error("API üzerinden resim alınamadı:", apiError);
+        // Direkt URL'yi döndür, şablon bunu işleyebilir
+        return url;
+      }
+    } catch (storageError) {
+      console.error("Storage'dan resim URL'si alınamadı:", storageError);
+      return null;
+    }
+  } catch (error) {
+    console.error("Profil resmi alınırken hata:", error);
+    return null;
+  }
+};
 
-        console.log('Profil resmi base64 formatına dönüştürüldü');
-        setProfileImage(data.imageData);
-
-      } catch (error) {
-        console.error('Profil resmi yüklenirken hata:', error);
-        setProfileImage(null);
+function TemplateSelectModal({ isOpen, onClose, onSelectTemplate, cvData }: TemplateSelectModalProps) {
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [selectedFormat, setSelectedFormat] = useState('pdf');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const { user } = useAuth();
+  const [htmlContent, setHtmlContent] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const prepareTemplate = async () => {
+      if (selectedTemplate && templateMapping[selectedTemplate] && isOpen) {
+        try {
+          const template = templateMapping[selectedTemplate];
+          console.log(`'${selectedTemplate}' şablonu yükleniyor`);
+          
+          // Profil resmini kontrol et
+          let profileImage = null;
+          
+          try {
+            // 1. Önce CVData'daki resmi kontrol et
+            if (cvData?.personal?.profileImageUrl) {
+              profileImage = cvData.personal.profileImageUrl;
+            } else {
+              // 2. Firebase'den kullanıcının profil resmini al
+              profileImage = await fetchProfileImageFromFirebase(user);
+            }
+          } catch (imgError) {
+            console.error('Profil resmi alınamadı:', imgError);
+          }
+          
+          // Şablonun HTML içeriğini oluştur
+          const generatedHtml = template.generateHTML(cvData, profileImage);
+          setHtmlContent(generatedHtml);
+          console.log(`'${selectedTemplate}' şablonu için HTML içeriği hazırlandı`);
+        } catch (error) {
+          console.error('Şablon hazırlama hatası:', error);
+        }
       }
     };
-
-    loadProfileImage();
-  }, [user, storage]);
-
-  const handleGeneratePDF = async () => {
+    
+    prepareTemplate();
+  }, [selectedTemplate, cvData, isOpen, user]);
+  
+  if (!isOpen) return null;
+  
+  const handleDownload = async () => {
+    if (!selectedTemplate) {
+      alert('Lütfen bir şablon seçin');
+      return;
+    }
+    
+    setIsGenerating(true);
+    
     try {
-      console.log('PDF oluşturma başladı. Profil resmi:', profileImage ? 'Mevcut' : 'Yok');
+      // Seçilen template ID kaydediliyor
+      console.log('Seçilen şablon:', selectedTemplate);
       
-      const defaultCV = {
-        title: 'CV',
-        personal: {
-          fullName: 'İsimsiz',
-          email: '',
-          phone: '',
-          birthDate: '',
-          address: ''
-        },
-        about: null,
-        education: [],
-        experience: [],
-        skills: [],
-        languages: [],
-        references: [],
-        certificates: []
-      };
-
-      const safeCV = {
-        ...defaultCV,
-        ...(cvData || {}),
-        personal: {
-          ...defaultCV.personal,
-          ...((cvData?.personal || {}))
-        }
-      };
-
-      // Profil resminin yüklenmesini bekleyelim
-      if (profileImage) {
-        console.log('Profil resmi PDF\'e ekleniyor');
+      // Seçilen şablona göre HTML içeriğini kesin olarak oluşturuyoruz
+      const template = templateMapping[selectedTemplate];
+      
+      if (!template) {
+        throw new Error(`${selectedTemplate} ID'li şablon bulunamadı`);
       }
-
-      await generatePDF(safeCV, selectedId as TemplateId, profileImage);
-      console.log('PDF oluşturma tamamlandı');
-      onClose();
+      
+      // Profil resmini tekrar kontrol
+      let profileImage = null;
+      try {
+        // Profil resmini al
+        profileImage = await fetchProfileImageFromFirebase(user);
+      } catch (imgError) {
+        console.error('Profil resmi alınamadı:', imgError);
+      }
+      
+      // HTML içeriğini oluştur
+      const finalHtmlContent = template.generateHTML(cvData, profileImage);
+      
+      if (selectedFormat === 'pdf') {
+        // PDF oluşturma servisi kullanılıyor
+        await generatePDFFromHTML(finalHtmlContent, `${cvData.title || 'cv'}.pdf`);
+        
+        // Başarılı sonuç
+        onSelectTemplate(selectedTemplate);
+        onClose();
+      } else if (selectedFormat === 'docx') {
+        alert('DOCX dönüştürme şu anda geliştirilme aşamasındadır. Lütfen PDF formatını kullanın.');
+      }
+      
+      setIsGenerating(false);
     } catch (error) {
-      console.error('PDF oluşturma hatası:', error);
-      alert('PDF oluşturulurken bir hata oluştu: ' + (error as Error).message);
+      console.error('İndirme hatası:', error);
+      alert('CV indirme sırasında bir hata oluştu');
+      setIsGenerating(false);
     }
   };
 
-  if (!isOpen) return null;
-
-  const selectedTemplate = templates.find(t => t.id === selectedId);
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end sm:items-center justify-center">
-      <div className="bg-white w-full max-w-3xl rounded-t-2xl sm:rounded-2xl max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+      <div className="bg-white rounded-xl w-full max-w-4xl mx-4 max-h-[90vh] flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-2xl font-semibold">CV Şablonu Seçin</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <FaTimes size={24} />
           </button>
+          <h2 className="text-xl font-semibold">CV Şablonu Seçin</h2>
+          <div></div>
         </div>
-
-        <div className="p-4 flex-1 overflow-y-auto">
-          <div className="flex overflow-x-auto space-x-6 pb-4 mb-4">
+        
+        <div className="p-4 bg-gray-50 border-b">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <h3 className="font-medium text-lg mb-2 sm:mb-0">Dosya Formatı Seçin:</h3>
+            <div className="flex space-x-3">
+              {downloadFormats.map((format) => (
+                <button
+                  key={format.id}
+                  onClick={() => setSelectedFormat(format.id)}
+                  className={`py-2 px-4 rounded-md flex items-center ${
+                    selectedFormat === format.id
+                      ? 'bg-primary text-white shadow-md'
+                      : 'bg-white border border-gray-200 hover:bg-gray-100'
+                  }`}
+                >
+                  {format.icon}
+                  <span>{format.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex-1 overflow-y-auto p-4">
+          <p className="mb-4 text-gray-600">
+            CV'nizi indirmek için bir şablon seçin. Her şablon farklı bir tasarım ve düzene sahiptir.
+          </p>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             {templates.map((template) => (
-              <div 
+              <div
                 key={template.id}
-                className="flex flex-col items-center min-w-[100px]"
-                onClick={() => setSelectedId(template.id)}
+                onClick={() => setSelectedTemplate(template.id)}
+                className={`border rounded-lg p-2 cursor-pointer transition-all ${
+                  selectedTemplate === template.id
+                    ? 'border-primary-500 ring-2 ring-primary-200'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
               >
-                <div className={`w-20 h-20 rounded-full relative cursor-pointer border-2 ${
-                  selectedId === template.id ? 'border-primary' : 'border-gray-200'
-                }`}>
-                  <Image
-                    src={template.thumbnail}
-                    alt={template.name}
+                <div className="relative aspect-[3/4] w-full bg-gray-100 rounded mb-2 overflow-hidden">
+                  <Image 
+                    src={template.image}
+                    alt={`${template.name} şablon önizlemesi`}
                     fill
-                    className="rounded-full object-cover"
+                    className="object-cover"
                   />
+                  
+                  {selectedTemplate === template.id && (
+                    <div className="absolute top-2 right-2 bg-primary text-white rounded-full p-1 z-10">
+                      <FaCheck size={12} />
+                    </div>
+                  )}
                 </div>
-                <span className={`mt-2 text-sm ${
-                  selectedId === template.id ? 'text-primary font-medium' : 'text-gray-600'
-                }`}>
-                  {template.name}
-                </span>
+                <h3 className="font-medium text-center">{template.name}</h3>
               </div>
             ))}
           </div>
-
-          {selectedTemplate && (
-            <div className="aspect-[1/1.414] relative bg-gray-50 rounded-lg shadow-sm">
-              <Image
-                src={selectedTemplate.image}
-                alt={selectedTemplate.name}
-                fill
-                className="object-contain"
-              />
-            </div>
-          )}
-
-          <button
-            onClick={handleGeneratePDF}
-            className="mt-4 w-full bg-primary text-white py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors"
-          >
-            <FaDownload />
-            <span className="font-semibold">PDF Olarak İndir</span>
-          </button>
+        </div>
+        
+        <div className="p-4 border-t">
+          <div className="flex justify-end gap-3">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            >
+              İptal
+            </button>
+            <button
+              onClick={handleDownload}
+              disabled={!selectedTemplate || isGenerating}
+              className={`px-4 py-2 rounded-md flex items-center gap-2 ${
+                !selectedTemplate || isGenerating
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-primary text-white hover:bg-primary/90'
+              }`}
+            >
+              {isGenerating ? (
+                <>
+                  <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+                  <span>İşleniyor...</span>
+                </>
+              ) : (
+                <>
+                  <FaDownload />
+                  <span>İndir</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TemplateSelectModal; 
+export default TemplateSelectModal

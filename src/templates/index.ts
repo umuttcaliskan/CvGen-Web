@@ -1,79 +1,65 @@
-import { modernTemplate } from './modern';
-import { professionalTemplate } from './professional';
-import { minimalistTemplate } from './minimalist';
-import { feminineTemplate } from './feminine';
-import { elegantTemplate } from './elegant';
+import corporateTemplate from './corporate';
+import atsMinimalTemplate from './ats-minimal';
+import ozVeNetTemplate from './oz-ve-net';
+import novaTemplate from './nova';
+import geceMavisiTemplate from './gece-mavisi';
+import baharEsintisiTemplate from './bahar-esintisi';
+import toprakTonuTemplate from './toprak-tonu';
+import professionalTemplate from './professional';
+import modernTemplate from './modern';
+import elegantTemplate from './elegant';
+import feminineTemplate from './feminine';
+import crystalClearTemplate from './crystal';
 
-export type TemplateId = keyof typeof templates;
+// Diğer şablonları buraya import edebilirsiniz
 
-export const templates = {
-  modern: modernTemplate,
-  professional: professionalTemplate,
-  minimalist: minimalistTemplate,
-  feminine: feminineTemplate,
-  elegant: elegantTemplate,
+// Şablonların haritası
+export const templateMapping: { [key: string]: any } = {
+  'is-dunyasi': corporateTemplate,
+  'dijital-gecis': atsMinimalTemplate,
+  'oz-ve-net': ozVeNetTemplate,
+  'nova': novaTemplate,
+  'gece-mavisi': geceMavisiTemplate,
+  'bahar-esintisi': baharEsintisiTemplate,
+  'toprak-tonu': toprakTonuTemplate,
+  'kariyer-odakli': professionalTemplate,
+  'mavi-ufuklar': modernTemplate,
+  'ince-detay': elegantTemplate,
+  'yalin-zarafet': feminineTemplate,
+  'kristal-netlik': crystalClearTemplate,
+  // Diğer şablonlar burada listelenir
 };
 
+// Bireysel şablonları da export et
+export {
+  corporateTemplate,
+  atsMinimalTemplate,
+  ozVeNetTemplate,
+  novaTemplate,
+  geceMavisiTemplate,
+  baharEsintisiTemplate,
+  toprakTonuTemplate,
+  professionalTemplate,
+  modernTemplate,
+  elegantTemplate,
+  feminineTemplate,
+  crystalClearTemplate
+  // Diğer şablonlar burada export edilir
+};
+
+// Şablonların listesi (UI için)
 export const templateList = [
-  {
-    id: 'modern',
-    name: 'Modern',
-    description: 'Temiz ve modern tasarımlı CV şablonu',
-    image: '/templates/modern.png'
-  },
-  {
-    id: 'professional',
-    name: 'Profesyonel',
-    description: 'İki sütunlu profesyonel CV şablonu',
-    image: '/templates/professional.png'
-  },
-  {
-    id: 'minimalist',
-    name: 'Minimalist',
-    description: 'Sade ve minimalist tasarımlı CV şablonu',
-    image: '/templates/minimalist.png'
-  },
-  {
-    id: 'feminine',
-    name: 'Feminine',
-    description: 'Zarif ve modern feminine CV şablonu',
-    image: '/templates/feminine.png'
-  },
-  {
-    id: 'elegant',
-    name: 'Elegant',
-    description: 'Şık ve profesyonel görünümlü CV şablonu',
-    image: '/templates/elegant.png'
-  }
-];
-
-interface CVSection {
-  title: string;
-  items: Array<{
-    id: string;
-    [key: string]: unknown;
-  }>;
-}
-
-interface CVData {
-  personal: {
-    fullName: string;
-    email: string;
-    phone: string;
-    // diğer alanlar...
-  };
-  education?: CVSection;
-  experience?: CVSection;
-  skills?: CVSection;
-  // diğer bölümler...
-}
-
-// Her template dosyasında bu interface'i kullan
-export function generateHTML(cv: CVData, profileImage: string | null, templateId: TemplateId = 'modern'): string {
-  const selectedTemplate = templates[templateId];
-  if (!selectedTemplate || typeof selectedTemplate.generateHTML !== 'function') {
-    throw new Error(`Template '${templateId}' bulunamadı veya geçerli değil`);
-  }
-  
-  return selectedTemplate.generateHTML(cv, profileImage);
-} 
+  corporateTemplate,
+  atsMinimalTemplate,
+  ozVeNetTemplate,
+  novaTemplate,
+  geceMavisiTemplate,
+  baharEsintisiTemplate,
+  toprakTonuTemplate,
+  professionalTemplate,
+  modernTemplate,
+  elegantTemplate,
+  feminineTemplate,
+  crystalClearTemplate
+  // Diğer şablonlar
+]; 
