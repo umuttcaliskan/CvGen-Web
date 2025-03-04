@@ -1,38 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CvGen - Profesyonel Özgeçmiş Oluşturma Platformu
 
-## Getting Started
+CvGen, iş arayanların kolayca profesyonel özgeçmişler oluşturmasını sağlayan modern bir web uygulamasıdır. Kullanıcı dostu arayüzü ve çeşitli şablonlarıyla, özgeçmiş oluşturma sürecini basitleştirir ve hızlandırır.
 
-First, run the development server:
+## 🚀 Özellikler
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Çeşitli Şablonlar**: Modern, profesyonel, elegant ve daha birçok farklı stilde şablon seçeneği
+- **Kullanıcı Hesapları**: Özgeçmişlerinizi kaydetme ve düzenleme imkanı
+- **PDF Dışa Aktarma**: Oluşturduğunuz özgeçmişleri PDF formatında indirme
+- **Mobil Uyumlu**: Her cihazda sorunsuz kullanım
+- **ATS Uyumlu Şablonlar**: İş başvurularında Applicant Tracking System (ATS) tarafından kolayca taranabilen şablonlar
+
+## 🛠️ Teknolojiler
+
+- [Next.js](https://nextjs.org/) - React framework
+- [TypeScript](https://www.typescriptlang.org/) - Tip güvenliği
+- [Firebase](https://firebase.google.com/) - Kimlik doğrulama ve veritabanı
+- [Tailwind CSS](https://tailwindcss.com/) - Stil ve tasarım
+- [Framer Motion](https://www.framer.com/motion/) - Animasyonlar
+- [jsPDF](https://github.com/parallax/jsPDF) - PDF oluşturma
+
+## 📋 Kurulum
+
+1. Repoyu klonlayın:
+   ```bash
+   git clone https://github.com/kullanici-adi/cvgen-web.git
+   cd cvgen-web
+   ```
+
+2. Bağımlılıkları yükleyin:
+   ```bash
+   npm install
+   ```
+
+3. `.env.example` dosyasını `.env` olarak kopyalayın ve Firebase bilgilerinizi ekleyin:
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Geliştirme sunucusunu başlatın:
+   ```bash
+   npm run dev
+   ```
+
+5. Tarayıcınızda [http://localhost:3000](http://localhost:3000) adresine gidin.
+
+## 🔧 Yapılandırma
+
+Firebase projenizi oluşturun ve `.env` dosyasındaki değişkenleri kendi Firebase projenizin bilgileriyle güncelleyin:
+
+```
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📱 Kullanım
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Ana sayfadan "CV Oluştur" butonuna tıklayın
+2. Kişisel bilgilerinizi, eğitim ve iş deneyimlerinizi girin
+3. Şablonlar arasından size uygun olanı seçin
+4. Önizlemeyi kontrol edin ve gerekirse düzenlemeler yapın
+5. "PDF İndir" butonuyla özgeçmişinizi indirin veya hesabınıza kaydedin
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🌐 Canlı Demo
 
-## Learn More
+[https://cvgen.com.tr](https://cvgen.com.tr)
 
-To learn more about Next.js, take a look at the following resources:
+## 📄 Lisans
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## 📞 İletişim
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# CvGen-Web
-# CvGen-Web
+Sorularınız veya önerileriniz için [destek@cvgen.com.tr](mailto:destek@cvgen.com.tr) adresine e-posta gönderebilirsiniz.
