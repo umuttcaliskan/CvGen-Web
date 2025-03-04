@@ -49,7 +49,6 @@ function Account() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isNotificationSettingsOpen, setIsNotificationSettingsOpen] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState<string | null>(null);
-  const [isDeleteAccountOpen, setIsDeleteAccountOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -313,7 +312,7 @@ function Account() {
                 </button>
 
                 <button 
-                  onClick={() => setIsDeleteAccountOpen(true)}
+                  onClick={() => router.push('/hesap-sil')}
                   className="w-full text-left px-4 py-3 border rounded hover:bg-gray-50 text-red-600 transition-colors"
                 >
                   Hesabı Sil
@@ -474,25 +473,6 @@ function Account() {
             </button>
           </div>
         </form>
-      </Modal>
-
-      <Modal isOpen={isDeleteAccountOpen} onClose={() => setIsDeleteAccountOpen(false)} title="Hesabı Sil">
-        <h2 className="text-lg">Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.</h2>
-        <div className="flex justify-end space-x-3 mt-6">
-          <button
-            type="button"
-            onClick={() => setIsDeleteAccountOpen(false)}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-          >
-            İptal
-          </button>
-          <button
-            onClick={handleDeleteAccount}
-            className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
-          >
-            Hesabı Sil
-          </button>
-        </div>
       </Modal>
     </div>
   )
