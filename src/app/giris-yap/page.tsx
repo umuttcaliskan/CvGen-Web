@@ -6,6 +6,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
+import SiteHelmet from '@/components/Helmet';
 
 const SignInPage: React.FC = () => {
   const { user, login } = useAuth();
@@ -36,6 +37,12 @@ const SignInPage: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <SiteHelmet 
+        title="Giriş Yap"
+        description="CvGen hesabınıza giriş yapın ve özgeçmişlerinizi yönetmeye başlayın. Güvenli ve hızlı erişim."
+        keywords="cv oluşturucu giriş, üye girişi, özgeçmiş giriş"
+        ogUrl="/giris-yap"
+      />
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
         <h2 className="text-2xl font-bold text-center mb-6">Giriş Yap</h2>
         <form onSubmit={handleSubmit}>

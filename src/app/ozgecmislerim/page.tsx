@@ -13,6 +13,7 @@ import TemplateSelectModal from '@/components/TemplateSelectModal'
 import MobileApp from '@/components/HomeComponents/MobileApp'
 import ViewCVModal from '@/components/ViewCVModal'
 import ReportBugModal from '@/components/ReportBugModal'
+import SiteHelmet from '@/components/Helmet'
 
 interface Resume {
   id: string;
@@ -175,6 +176,12 @@ function MyResumes() {
 
   return (
     <div className="relative">
+      <SiteHelmet 
+        title="Özgeçmişlerim"
+        description="Oluşturduğunuz tüm CV'lerinizi görüntüleyin, düzenleyin, indirin veya yeni CV oluşturun. Kariyerinizi yönetin."
+        keywords="cv yönetimi, özgeçmiş düzenleme, özgeçmiş indirme, profesyonel cv"
+        ogUrl="/ozgecmislerim"
+      />
       <Banner 
         title="Özgeçmişlerim" 
         description="Oluşturduğunuz tüm CV'lerinizi buradan yönetebilirsiniz." 

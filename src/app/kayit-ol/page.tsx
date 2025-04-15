@@ -6,6 +6,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { db } from '@/firebaseConfig';
 import { setDoc, doc } from 'firebase/firestore';
 import Link from 'next/link';
+import SiteHelmet from '@/components/Helmet';
 
 function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -52,6 +53,12 @@ function RegisterPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <SiteHelmet 
+        title="Kayıt Ol"
+        description="CvGen'e üye olun ve profesyonel özgeçmişinizi oluşturmaya hemen başlayın. Kolay ve hızlı kayıt süreci."
+        keywords="cv oluşturucu kayıt, ücretsiz üyelik, özgeçmiş hazırlama kayıt"
+        ogUrl="/kayit-ol"
+      />
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
         <h2 className="text-2xl font-bold text-center mb-6">Kayıt Ol</h2>
         <form onSubmit={handleSubmit} className="space-y-4">

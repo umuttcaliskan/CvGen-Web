@@ -21,6 +21,7 @@ import { FieldValue } from 'firebase/firestore';
 import { CVData, CVSectionData } from '@/types/cv';
 import { generateUUID } from '@/utils/uuid';
 import ReportBugModal from '@/components/ReportBugModal';
+import SiteHelmet from '@/components/Helmet';
 
 interface CVSection {
   id: string;
@@ -394,165 +395,173 @@ export default function CreateCV() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 relative">
-      <BannerGray 
-        title={isEditMode ? "CV Düzenle" : "CV Oluştur"} 
-        description={isEditMode ? "CV'nizi düzenleyin" : "Profesyonel CV'nizi adım adım oluşturun"} 
+    <>
+      <SiteHelmet 
+        title="CV Oluştur"
+        description="Hızlı ve kolay bir şekilde profesyonel özgeçmişinizi oluşturun. Tüm bölümleri doldurarak iş başvurularınızda öne çıkın."
+        keywords="cv oluşturma, cv hazırlama, online cv, profesyonel özgeçmiş, ücretsiz cv oluşturma"
+        ogUrl="/cv-olustur"
       />
+      <div className="min-h-screen bg-gray-50 relative">
+        <BannerGray 
+          title={isEditMode ? "CV Düzenle" : "CV Oluştur"} 
+          description={isEditMode ? "CV'nizi düzenleyin" : "Profesyonel CV'nizi adım adım oluşturun"} 
+        />
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* CV başlığı input alanı */}
-        <div className="mb-8">
-          <label htmlFor="cvTitle" className="block text-sm font-medium text-gray-700 mb-2">
-            CV Başlığı
-          </label>
-          <input
-            type="text"
-            id="cvTitle"
-            value={cvData.title}
-            onChange={(e) => setCvData(prev => ({ ...prev, title: e.target.value }))}
-            placeholder="Örn: Yazılım Mühendisi CV'si"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-transparent"
-          />
-          <p className="mt-1 text-sm text-gray-500">
-            Bu başlık özgeçmişlerim sayfasında CV'nizi tanımlamak için kullanılacaktır.
-          </p>
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          {/* CV başlığı input alanı */}
+          <div className="mb-8">
+            <label htmlFor="cvTitle" className="block text-sm font-medium text-gray-700 mb-2">
+              CV Başlığı
+            </label>
+            <input
+              type="text"
+              id="cvTitle"
+              value={cvData.title}
+              onChange={(e) => setCvData(prev => ({ ...prev, title: e.target.value }))}
+              placeholder="Örn: Yazılım Mühendisi CV'si"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-transparent"
+            />
+            <p className="mt-1 text-sm text-gray-500">
+              Bu başlık özgeçmişlerim sayfasında CV'nizi tanımlamak için kullanılacaktır.
+            </p>
+          </div>
+
+          <div className="grid gap-4">
+            {cvSections.map((section) => (
+              <button
+                key={section.id}
+                onClick={() => handleModalOpen(section.id)}
+                className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200 flex items-center justify-between w-full"
+              >
+                <div className="flex items-center">
+                  <div className="bg-primary/10 p-3 rounded-lg">
+                    {section.icon}
+                  </div>
+                  <div className="ml-4 text-left">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {section.title}
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      {section.description}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {section.completed && (
+                    <FaCheck className="text-green-500" />
+                  )}
+                  <FaChevronRight className="text-gray-400" />
+                </div>
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={handleCreateCV}
+            className="mt-8 w-full bg-primary text-white py-4 rounded-xl font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+          >
+            <FaFileAlt />
+            {isEditMode ? 'CV Güncelle' : 'CV Oluştur'}
+          </button>
         </div>
 
-        <div className="grid gap-4">
-          {cvSections.map((section) => (
-            <button
-              key={section.id}
-              onClick={() => handleModalOpen(section.id)}
-              className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200 flex items-center justify-between w-full"
-            >
-              <div className="flex items-center">
-                <div className="bg-primary/10 p-3 rounded-lg">
-                  {section.icon}
-                </div>
-                <div className="ml-4 text-left">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {section.title}
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    {section.description}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                {section.completed && (
-                  <FaCheck className="text-green-500" />
-                )}
-                <FaChevronRight className="text-gray-400" />
-              </div>
-            </button>
-          ))}
-        </div>
-
+        {/* Sabit konumlandırılmış Hata Bildir butonu */}
         <button
-          onClick={handleCreateCV}
-          className="mt-8 w-full bg-primary text-white py-4 rounded-xl font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+          onClick={() => setIsReportBugModalOpen(true)}
+          className="fixed bottom-6 right-6 bg-white shadow-lg border border-gray-200 text-gray-700 py-3 px-5 rounded-full font-medium hover:bg-gray-50 transition-colors flex items-center gap-2 z-10"
         >
-          <FaFileAlt />
-          {isEditMode ? 'CV Güncelle' : 'CV Oluştur'}
+          <FaBug className="text-red-500" />
+          Hata Bildir
         </button>
+
+        {/* Modal bileşenleri */}
+        {activeModal === 'personal' && (
+          <PersonalInfoModal
+            isOpen={true}
+            onClose={() => setActiveModal(null)}
+            onSave={(data) => handleSaveSection('personal', data)}
+            initialData={cvData.personal}
+          />
+        )}
+        {activeModal === 'about' && (
+          <AboutModal
+            isOpen={true}
+            onClose={() => setActiveModal(null)}
+            onSave={(data) => handleSaveSection('about', data)}
+            initialData={cvData.about}
+          />
+        )}
+        {activeModal === 'education' && (
+          <EducationModal
+            isOpen={true}
+            onClose={() => setActiveModal(null)}
+            onSave={(data) => handleSaveSection('education', data)}
+            initialData={cvData.education}
+          />
+        )}
+        {activeModal === 'certificates' && (
+          <CertificatesModal
+            isOpen={true}
+            onClose={() => setActiveModal(null)}
+            onSave={(data) => handleSaveSection('certificates', data)}
+            initialData={cvData.certificates}
+          />
+        )}
+        {activeModal === 'experience' && (
+          <ExperienceModal
+            isOpen={true}
+            onClose={() => setActiveModal(null)}
+            onSave={(data) => handleSaveSection('experience', data)}
+            initialData={cvData.experience}
+          />
+        )}
+        {activeModal === 'languages' && (
+          <LanguagesModal
+            isOpen={true}
+            onClose={() => setActiveModal(null)}
+            onSave={(data) => handleSaveSection('languages', data)}
+            initialData={cvData.languages}
+          />
+        )}
+        {activeModal === 'references' && (
+          <ReferencesModal
+            isOpen={true}
+            onClose={() => setActiveModal(null)}
+            onSave={(data) => handleSaveSection('references', data)}
+            initialData={cvData.references}
+          />
+        )}
+        {activeModal === 'skills' && (
+          <SkillsModal
+            isOpen={true}
+            onClose={() => setActiveModal(null)}
+            onSave={(data) => handleSaveSection('skills', data)}
+            initialData={cvData.skills}
+          />
+        )}
+        {activeModal === 'projects' && (
+          <ProjectsModal
+            isOpen={true}
+            onClose={() => setActiveModal(null)}
+            onSave={(data) => handleSaveSection('projects', data)}
+            initialData={cvData.projects}
+          />
+        )}
+        {activeModal === 'socialMedia' && (
+          <SocialMediaModal
+            isOpen={true}
+            onClose={() => setActiveModal(null)}
+            onSave={(data) => handleSaveSection('socialMedia', data)}
+            initialData={cvData.socialMedia}
+          />
+        )}
+        
+        <ReportBugModal 
+          isOpen={isReportBugModalOpen} 
+          onClose={() => setIsReportBugModalOpen(false)} 
+        />
       </div>
-
-      {/* Sabit konumlandırılmış Hata Bildir butonu */}
-      <button
-        onClick={() => setIsReportBugModalOpen(true)}
-        className="fixed bottom-6 right-6 bg-white shadow-lg border border-gray-200 text-gray-700 py-3 px-5 rounded-full font-medium hover:bg-gray-50 transition-colors flex items-center gap-2 z-10"
-      >
-        <FaBug className="text-red-500" />
-        Hata Bildir
-      </button>
-
-      {/* Modal bileşenleri */}
-      {activeModal === 'personal' && (
-        <PersonalInfoModal
-          isOpen={true}
-          onClose={() => setActiveModal(null)}
-          onSave={(data) => handleSaveSection('personal', data)}
-          initialData={cvData.personal}
-        />
-      )}
-      {activeModal === 'about' && (
-        <AboutModal
-          isOpen={true}
-          onClose={() => setActiveModal(null)}
-          onSave={(data) => handleSaveSection('about', data)}
-          initialData={cvData.about}
-        />
-      )}
-      {activeModal === 'education' && (
-        <EducationModal
-          isOpen={true}
-          onClose={() => setActiveModal(null)}
-          onSave={(data) => handleSaveSection('education', data)}
-          initialData={cvData.education}
-        />
-      )}
-      {activeModal === 'certificates' && (
-        <CertificatesModal
-          isOpen={true}
-          onClose={() => setActiveModal(null)}
-          onSave={(data) => handleSaveSection('certificates', data)}
-          initialData={cvData.certificates}
-        />
-      )}
-      {activeModal === 'experience' && (
-        <ExperienceModal
-          isOpen={true}
-          onClose={() => setActiveModal(null)}
-          onSave={(data) => handleSaveSection('experience', data)}
-          initialData={cvData.experience}
-        />
-      )}
-      {activeModal === 'languages' && (
-        <LanguagesModal
-          isOpen={true}
-          onClose={() => setActiveModal(null)}
-          onSave={(data) => handleSaveSection('languages', data)}
-          initialData={cvData.languages}
-        />
-      )}
-      {activeModal === 'references' && (
-        <ReferencesModal
-          isOpen={true}
-          onClose={() => setActiveModal(null)}
-          onSave={(data) => handleSaveSection('references', data)}
-          initialData={cvData.references}
-        />
-      )}
-      {activeModal === 'skills' && (
-        <SkillsModal
-          isOpen={true}
-          onClose={() => setActiveModal(null)}
-          onSave={(data) => handleSaveSection('skills', data)}
-          initialData={cvData.skills}
-        />
-      )}
-      {activeModal === 'projects' && (
-        <ProjectsModal
-          isOpen={true}
-          onClose={() => setActiveModal(null)}
-          onSave={(data) => handleSaveSection('projects', data)}
-          initialData={cvData.projects}
-        />
-      )}
-      {activeModal === 'socialMedia' && (
-        <SocialMediaModal
-          isOpen={true}
-          onClose={() => setActiveModal(null)}
-          onSave={(data) => handleSaveSection('socialMedia', data)}
-          initialData={cvData.socialMedia}
-        />
-      )}
-      
-      <ReportBugModal 
-        isOpen={isReportBugModalOpen} 
-        onClose={() => setIsReportBugModalOpen(false)} 
-      />
-    </div>
+    </>
   );
 }
