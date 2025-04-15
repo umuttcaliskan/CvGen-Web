@@ -13,7 +13,7 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="border-b fixed top-0 left-0 right-0 z-10 bg-white">
+    <header className="border-b fixed top-0 left-0 right-0 z-10" style={{ backgroundColor: 'var(--background)', borderColor: 'var(--card-border)' }}>
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center">
@@ -26,37 +26,33 @@ export default function Header() {
           />
         </Link>
 
-        {/* Mobil Menü Butonu */}
-        <button 
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden text-foreground p-2"
-        >
-          {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-        </button>
-
         {/* Ana Menü - Desktop */}
         <nav className="hidden md:flex items-center gap-8">
           <Link 
             href="/cv-olustur" 
-            className="text-foreground hover:text-foreground/80 transition-colors"
+            className="transition-colors"
+            style={{ color: 'var(--text-primary)' }}
           >
             CV Oluştur
           </Link>
           <Link 
             href="/ozgecmislerim"
-            className="text-foreground hover:text-foreground/80 transition-colors"
+            className="transition-colors"
+            style={{ color: 'var(--text-primary)' }}
           >
             Özgeçmişlerim
           </Link>
           <Link 
             href="/blog" 
-            className="text-foreground hover:text-foreground/80 transition-colors"
+            className="transition-colors"
+            style={{ color: 'var(--text-primary)' }}
           >
             Blog
           </Link>
           <Link 
             href="/iletisim" 
-            className="text-foreground hover:text-foreground/80 transition-colors"
+            className="transition-colors"
+            style={{ color: 'var(--text-primary)' }}
           >
             İletişim
           </Link>
@@ -67,7 +63,11 @@ export default function Header() {
           {user ? (
             <Link
               href="/hesabim"
-              className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-full hover:bg-primary/90 transition-all duration-300 shadow-md hover:shadow-lg"
+              className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg"
+              style={{ 
+                backgroundColor: 'var(--primary)', 
+                color: 'var(--button-text)'
+              }}
             >
               <FaUser className="text-sm" />
               <span>Hesabım</span>
@@ -76,13 +76,18 @@ export default function Header() {
             <>
               <Link
                 href="/giris-yap"
-                className="text-foreground hover:text-foreground/80 transition-colors"
+                className="transition-colors"
+                style={{ color: 'var(--text-primary)' }}
               >
                 Giriş Yap
               </Link>
               <Link
                 href="/kayit-ol"
-                className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors"
+                className="px-4 py-2 rounded-md transition-colors"
+                style={{ 
+                  backgroundColor: 'var(--primary)', 
+                  color: 'var(--button-text)'
+                }}
               >
                 Kayıt Ol
               </Link>
@@ -90,45 +95,62 @@ export default function Header() {
           )}
         </div>
 
+        {/* Mobil Menü Butonu */}
+        <button 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="md:hidden"
+          style={{ color: 'var(--text-primary)' }}
+        >
+          {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        </button>
+
         {/* Mobil Menü */}
         {isMobileMenuOpen && (
-          <div className="absolute top-16 left-0 right-0 bg-white border-b md:hidden">
+          <div className="absolute top-16 left-0 right-0 border-b md:hidden" style={{ backgroundColor: 'var(--background)', borderColor: 'var(--card-border)' }}>
             <nav className="flex flex-col p-4">
               <Link 
                 href="/cv-olustur" 
-                className="py-3 text-foreground hover:text-foreground/80 transition-colors"
+                className="py-3 transition-colors"
+                style={{ color: 'var(--text-primary)' }}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 CV Oluştur
               </Link>
               <Link 
                 href="/ozgecmislerim"
-                className="py-3 text-foreground hover:text-foreground/80 transition-colors"
+                className="py-3 transition-colors"
+                style={{ color: 'var(--text-primary)' }}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Özgeçmişlerim
               </Link>
               <Link 
                 href="/blog" 
-                className="py-3 text-foreground hover:text-foreground/80 transition-colors"
+                className="py-3 transition-colors"
+                style={{ color: 'var(--text-primary)' }}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Blog
               </Link>
               <Link 
                 href="/iletisim" 
-                className="py-3 text-foreground hover:text-foreground/80 transition-colors"
+                className="py-3 transition-colors"
+                style={{ color: 'var(--text-primary)' }}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 İletişim
               </Link>
               
               {/* Giriş/Kayıt veya Hesabım Butonu - Mobil */}
-              <div className="border-t mt-3 pt-3">
+              <div className="mt-3 pt-3" style={{ borderTopColor: 'var(--card-border)', borderTopWidth: '1px' }}>
                 {user ? (
                   <Link
                     href="/hesabim"
-                    className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-full hover:bg-primary/90 transition-all"
+                    className="flex items-center gap-2 px-4 py-2 rounded-full transition-all"
+                    style={{ 
+                      backgroundColor: 'var(--primary)', 
+                      color: 'var(--button-text)'
+                    }}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <FaUser className="text-sm" />
@@ -138,14 +160,19 @@ export default function Header() {
                   <div className="flex flex-col gap-2">
                     <Link
                       href="/giris-yap"
-                      className="text-center py-2 text-foreground hover:text-foreground/80 transition-colors"
+                      className="text-center py-2 transition-colors"
+                      style={{ color: 'var(--text-primary)' }}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       Giriş Yap
                     </Link>
                     <Link
                       href="/kayit-ol"
-                      className="text-center bg-black text-white py-2 rounded-md hover:bg-gray-800 transition-colors"
+                      className="text-center py-2 rounded-md transition-colors"
+                      style={{ 
+                        backgroundColor: 'var(--primary)', 
+                        color: 'var(--button-text)'
+                      }}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       Kayıt Ol

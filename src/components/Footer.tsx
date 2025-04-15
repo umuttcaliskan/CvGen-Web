@@ -69,7 +69,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="bg-gradient-to-br from-primary to-primary-dark text-white">
+    <footer style={{ backgroundColor: 'var(--primary)', color: 'white' }}>
       {/* Dalga SVG */}
       <div className="w-full overflow-hidden leading-[0]">
         <svg 
@@ -80,7 +80,7 @@ export default function Footer() {
         >
           <path 
             d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" 
-            className="fill-gray-50"
+            style={{ fill: 'var(--background)' }}
           />
         </svg>
       </div>
@@ -97,21 +97,21 @@ export default function Footer() {
               height={63} 
               className="mb-4 sm:w-[200px] w-[180px] self-start" 
             />
-            <p className="text-white/90 text-sm max-w-xs">
+            <p className="text-sm max-w-xs" style={{ color: 'white' }}>
               CVGen ile profesyonel özgeçmişinizi dakikalar içinde oluşturun. ATS uyumlu şablonlar ve kolay kullanım.
             </p>
             {/* Sosyal Medya */}
             <div className="flex space-x-4 pt-2">
-              <Link href="#" className="text-white/90 hover:text-white transition-colors">
+              <Link href="#" className="hover:opacity-80 transition-colors" style={{ color: 'white' }}>
                 <FaFacebook size={20} />
               </Link>
-              <Link href="#" className="text-white/90 hover:text-white transition-colors">
+              <Link href="#" className="hover:opacity-80 transition-colors" style={{ color: 'white' }}>
                 <FaTwitter size={20} />
               </Link>
-              <Link href="#" className="text-white/90 hover:text-white transition-colors">
+              <Link href="#" className="hover:opacity-80 transition-colors" style={{ color: 'white' }}>
                 <FaInstagram size={20} />
               </Link>
-              <Link href="#" className="text-white/90 hover:text-white transition-colors">
+              <Link href="#" className="hover:opacity-80 transition-colors" style={{ color: 'white' }}>
                 <FaLinkedin size={20} />
               </Link>
             </div>
@@ -119,25 +119,25 @@ export default function Footer() {
 
           {/* CV Örnekleri */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">CV Örnekleri</h3>
+            <h3 className="text-lg font-semibold mb-4" style={{ color: 'white' }}>CV Örnekleri</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/sablonlar" className="text-white/90 hover:text-white transition-colors text-sm">
+                <Link href="/sablonlar" className="hover:opacity-80 transition-colors text-sm" style={{ color: 'white' }}>
                   Yazılım Geliştirici CV Örneği
                 </Link>
               </li>
               <li>
-                <Link href="/sablonlar" className="text-white/90 hover:text-white transition-colors text-sm">
+                <Link href="/sablonlar" className="hover:opacity-80 transition-colors text-sm" style={{ color: 'white' }}>
                   Öğretmen CV Örneği
                 </Link>
               </li>
               <li>
-                <Link href="/sablonlar" className="text-white/90 hover:text-white transition-colors text-sm">
+                <Link href="/sablonlar" className="hover:opacity-80 transition-colors text-sm" style={{ color: 'white' }}>
                   Grafik Tasarımcı CV Örneği
                 </Link>
               </li>
               <li>
-                <Link href="/sablonlar" className="text-white/90 hover:text-white transition-colors text-sm">
+                <Link href="/sablonlar" className="hover:opacity-80 transition-colors text-sm" style={{ color: 'white' }}>
                   Tüm CV Örnekleri →
                 </Link>
               </li>
@@ -146,18 +146,19 @@ export default function Footer() {
 
           {/* Blog */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Son Yazılar</h3>
+            <h3 className="text-lg font-semibold mb-4" style={{ color: 'white' }}>Son Yazılar</h3>
             <ul className="space-y-2">
               {loading ? (
                 <li>
-                  <span className="text-white/60 text-sm">Yazılar yükleniyor...</span>
+                  <span className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Yazılar yükleniyor...</span>
                 </li>
               ) : recentPosts.length > 0 ? (
                 recentPosts.map((post) => (
                   <li key={post.id}>
                     <Link 
                       href={`/blog/${post.id}`} 
-                      className="text-white/90 hover:text-white transition-colors text-sm"
+                      className="hover:opacity-80 transition-colors text-sm"
+                      style={{ color: 'white' }}
                     >
                       {post.title}
                     </Link>
@@ -168,7 +169,8 @@ export default function Footer() {
                   <li key={post.id}>
                     <Link 
                       href={`/blog/${post.id}`} 
-                      className="text-white/90 hover:text-white transition-colors text-sm"
+                      className="hover:opacity-80 transition-colors text-sm"
+                      style={{ color: 'white' }}
                     >
                       {post.title}
                     </Link>
@@ -176,7 +178,7 @@ export default function Footer() {
                 ))
               )}
               <li>
-                <Link href="/blog" className="text-white/90 hover:text-white transition-colors text-sm">
+                <Link href="/blog" className="hover:opacity-80 transition-colors text-sm" style={{ color: 'white' }}>
                   Tüm Yazılar →
                 </Link>
               </li>
@@ -185,17 +187,17 @@ export default function Footer() {
 
           {/* İletişim */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">İletişim</h3>
+            <h3 className="text-lg font-semibold mb-4" style={{ color: 'white' }}>İletişim</h3>
             <div className="space-y-3">
-              <div className="flex items-center space-x-3 text-white/90">
-                <FaEnvelope className="text-white/90" />
-                <a href="mailto:destek@cvgen.com" className="text-sm hover:text-white transition-colors">
+              <div className="flex items-center space-x-3">
+                <FaEnvelope style={{ color: 'white' }} />
+                <a href="mailto:destek@cvgen.com" className="text-sm hover:opacity-80 transition-colors" style={{ color: 'white' }}>
                   destek@cvgen.com.tr
                 </a>
               </div>
-              <div className="flex items-center space-x-3 text-white/90">
-                <FaPhone className="text-white/90" />
-                <a href="tel:+901234567890" className="text-sm hover:text-white transition-colors">
+              <div className="flex items-center space-x-3">
+                <FaPhone style={{ color: 'white' }} />
+                <a href="tel:+901234567890" className="text-sm hover:opacity-80 transition-colors" style={{ color: 'white' }}>
                   +90 506 593 70 34
                 </a>
               </div>
@@ -203,23 +205,22 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Alt Kısım */}
-        <div className="pt-6 sm:pt-8 border-t border-white/10">
-          <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 text-center sm:text-left">
-            <div className="text-xs sm:text-sm text-white/90">
-              &copy; {new Date().getFullYear()} PickSoSo. Tüm hakları saklıdır.
-            </div>
-            <div className="flex flex-wrap justify-center sm:justify-end gap-4 sm:gap-6">
-              <Link href="/gizlilik-politikasi" className="text-xs sm:text-sm text-white/90 hover:text-white transition-colors">
-                Gizlilik Politikası
-              </Link>
-              <Link href="/kullanim-kosullari" className="text-xs sm:text-sm text-white/90 hover:text-white transition-colors">
-                Kullanım Koşulları
-              </Link>
-              <Link href="/sitemap" className="text-xs sm:text-sm text-white/90 hover:text-white transition-colors">
-                Site Haritası
-              </Link>
-            </div>
+        {/* Alt Kısım - Telif Hakkı ve Linkler */}
+        <div className="pt-8 border-t border-white/20 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+          <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
+            © {new Date().getFullYear()} CVGen. Tüm hakları saklıdır.
+          </p>
+          
+          <div className="flex flex-wrap justify-center sm:justify-end gap-x-6 gap-y-2">
+            <Link href="/kullanim-kosullari" className="text-sm hover:opacity-80 transition-colors" style={{ color: 'white' }}>
+              Kullanım Koşulları
+            </Link>
+            <Link href="/gizlilik-politikasi" className="text-sm hover:opacity-80 transition-colors" style={{ color: 'white' }}>
+              Gizlilik Politikası
+            </Link>
+            <Link href="/hesap-sil" className="text-sm hover:opacity-80 transition-colors" style={{ color: 'white' }}>
+              Hesap Silme
+            </Link>
           </div>
         </div>
       </div>
