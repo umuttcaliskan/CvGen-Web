@@ -24,6 +24,7 @@ export default function RootLayout({
     <html lang="tr">
       <head>
         <meta name="google-site-verification" content="FKxABNn3I3zdKWJxWkVLTlYtuFin_2PxKFqdsNgwgQ0" />
+        <meta name="google-adsense-account" content="ca-pub-8769506745005038"></meta>
       </head>
       <body className={inter.variable}>
         <AuthProvider>
