@@ -24,10 +24,10 @@ export default function HomeBanner() {
             <p className="text-lg md:text-xl mb-8 text-gray-100">
               Modern şablonlar ve kolay kullanım ile hayalinizdeki işe bir adım daha yaklaşın.
             </p>
-            <div className="space-y-4 md:space-x-4 md:flex md:space-y-0">
+            <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
               <Link
                 href="/cv-olustur"
-                className="bg-accent hover:bg-accent-dark text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-flex items-center"
+                className="bg-accent hover:bg-accent-dark text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-flex items-center justify-center"
               >
                 CV Oluştur
                 <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,7 +36,7 @@ export default function HomeBanner() {
               </Link>
               <Link
                 href="/sablonlar"
-                className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+                className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-lg font-semibold transition-colors text-center"
               >
                 Şablonları İncele
               </Link>
