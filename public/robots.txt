@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://cvgen.com.tr
+
+# Sitemaps
+Sitemap: https://cvgen.com.tr/sitemap.xml

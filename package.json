@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "sitemap": "next-sitemap",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
@@ -15,6 +17,7 @@
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.0",
     "next": "^15.0.1",
+    "next-sitemap": "^4.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
