@@ -27,6 +27,15 @@ export default function RootLayout({
         <meta name="google-adsense-account" content="ca-pub-8769506745005038"></meta>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8769506745005038"
      crossOrigin="anonymous"></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-TQH1TGE2SD"></script>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-TQH1TGE2SD');
+          `
+        }} />
       </head>
       <body className={inter.variable}>
         <AuthProvider>
