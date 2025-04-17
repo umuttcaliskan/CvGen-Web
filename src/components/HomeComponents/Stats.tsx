@@ -3,8 +3,8 @@
 import { motion } from 'framer-motion';
 
 const stats = [
-  { number: "20K+", label: "Oluşturulan CV" },
-  { number: "30+", label: "CV Şablonu" },
+  { number: "1K+", label: "Oluşturulan CV" },
+  { number: "10+", label: "CV Şablonu" },
   { number: "4.8/5", label: "Kullanıcı Puanı" }
 ];
 
