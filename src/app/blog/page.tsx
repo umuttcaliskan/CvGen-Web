@@ -4,7 +4,33 @@ import BannerImage from '@/assets/images/cvtemplate.webp'
 import Image from 'next/image'
 import Link from 'next/link'
 import { db } from '@/firebaseConfig'
-import { collection, getDocs, orderBy, query } from 'firebase/firestore'
+import { collection, getDocs, orderBy, query, DocumentData } from 'firebase/firestore'
+import Script from 'next/script'
+
+interface BlogPost {
+  id: string;
+  title: string;
+  content: string;
+  imageUrl?: string;
+  topic: string;
+  createdAt: any;
+  authorName: string;
+}
+
+// Tarih formatlama fonksiyonu
+function formatDate(date: any) {
+  const d = new Date(date);
+  const months = [
+    'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+    'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+  ];
+  
+  return {
+    day: d.getDate(),
+    month: months[d.getMonth()],
+    year: d.getFullYear()
+  };
+}
 
 export const metadata = {
   title: 'CV Blogu | Ücretsiz CV Hazırlama ve Kariyer İpuçları',
@@ -25,9 +51,9 @@ async function Blog() {
   );
   
   const blogsSnapshot = await getDocs(blogsQuery);
-  const blogPosts = blogsSnapshot.docs.map(doc => ({
+  const blogPosts: BlogPost[] = blogsSnapshot.docs.map(doc => ({
     id: doc.id,
-    ...doc.data()
+    ...(doc.data() as Omit<BlogPost, 'id'>)
   }));
 
   // Schema.org BlogPosting JSON-LD
@@ -41,9 +67,11 @@ async function Blog() {
 
   return (
     <Fragment>
-      <head>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      </head>
+      <Script
+        id="blog-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       <div className="min-h-screen">
         <main className="min-h-screen bg-gray-50">
           <BannerGray 
@@ -71,11 +99,10 @@ async function Blog() {
                         {blogPosts[0].topic}
                       </span>
                       <time className="text-gray-500 text-sm">
-                        {new Date(blogPosts[0].createdAt).toLocaleDateString('tr-TR', {
-                          day: 'numeric',
-                          month: 'long',
-                          year: 'numeric'
-                        })}
+                        {(() => {
+                          const date = formatDate(blogPosts[0].createdAt);
+                          return `${date.day} ${date.month} ${date.year}`;
+                        })()}
                       </time>
                     </div>
                     <h2 className="text-3xl font-bold mb-4 group-hover:text-primary transition-colors">
@@ -121,10 +148,10 @@ async function Blog() {
                           {post.topic}
                         </span>
                         <time className="text-sm text-gray-500">
-                          {new Date(post.createdAt).toLocaleDateString('tr-TR', {
-                            day: 'numeric',
-                            month: 'long'
-                          })}
+                          {(() => {
+                            const date = formatDate(post.createdAt);
+                            return `${date.day} ${date.month}`;
+                          })()}
                         </time>
                       </div>
                       
