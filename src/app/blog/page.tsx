@@ -35,7 +35,7 @@ function formatDate(date: any) {
 export const metadata = {
   title: 'CV Blogu | Ücretsiz CV Hazırlama ve Kariyer İpuçları',
   description: 'Ücretsiz ve hızlı CV hazırlama, iş başvurusu ve kariyer gelişimi hakkında güncel blog yazıları. Dakikalar içinde profesyonel CV oluşturmanın püf noktaları burada!',
-  keywords: 'cv blog, ücretsiz cv, hızlı cv hazırlama, kariyer blog, iş başvurusu, cv ipuçları, cv oluşturucu',
+  keywords: 'cv blog, ücretsiz cv, hızlı cv hazırlama, kariyer blog, iş başvurusu, cv ipuçları, cv oluşturucu, cv maker, cv generator, cv hazırlama rehberi, kariyer tavsiyeleri',
   openGraph: {
     title: 'CV Blogu | Ücretsiz CV Hazırlama ve Kariyer İpuçları',
     description: 'Ücretsiz ve hızlı CV hazırlama, iş başvurusu ve kariyer gelişimi hakkında güncel blog yazıları. Dakikalar içinde profesyonel CV oluşturmanın püf noktaları burada!',
@@ -79,6 +79,7 @@ async function Blog() {
             description="CV hazırlama ve kariyer gelişimi hakkında faydalı içerikler" 
             imageSrc={BannerImage}
           />
+          <h1 className="sr-only">CV Hazırlama ve Kariyer Gelişimi Blogu - Ücretsiz CV İpuçları ve Rehberler</h1>
 
           <div className="max-w-7xl mx-auto px-4 py-16">
             {/* Öne Çıkan Blog Yazısı */}

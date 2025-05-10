@@ -42,7 +42,7 @@ function TemplateSections() {
       <SiteHelmet 
         title="CV Şablonları"
         description="İş başvurularınızda fark yaratacak profesyonel ve modern CV şablonlarımızı keşfedin. ATS uyumlu, minimalist ve profesyonel tasarımlarımız arasından size en uygun olanı seçin."
-        keywords="cv şablonları, özgeçmiş şablonları, ats uyumlu cv, profesyonel cv, minimalist cv"
+        keywords="cv şablonları, özgeçmiş şablonları, ats uyumlu cv, profesyonel cv, minimalist cv, cv maker, cv generator, cv hazırlama, ücretsiz cv şablonları, modern cv tasarımları, özgeçmiş, canva cv, cv oluştur, cv hazırla, cv maker, cv generator, özgeçmiş oluşturma, profesyonel cv, cv şablonları, online cv, ücretsiz cv, bedava cv"
         ogUrl="/sablonlar"
       />
       <div className="container mx-auto px-4 py-10">
