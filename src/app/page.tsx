@@ -13,9 +13,9 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <SiteHelmet 
-        title="Anasayfa"
-        description="CvGen ile profesyonel CV'nizi dakikalar içinde oluşturun. Türkiye'nin en iyi CV oluşturma aracı ile iş arama sürecinizi kolaylaştırın."
-        keywords="cv oluşturma, özgeçmiş hazırlama, online cv, profesyonel cv, ücretsiz cv şablonları"
+        title="Ücretsiz ve Hızlı CV Oluştur | Dakikalar İçinde CV Hazırla"
+        description="Ücretsiz ve kolay kullanımlı arayüzümüzle dakikalar içinde profesyonel CV oluşturun. Hemen deneyin, iş başvurularınızda öne çıkın!"
+        keywords="ücretsiz cv oluştur, hızlı cv hazırlama, online cv, profesyonel cv, cv oluşturucu, dakikada cv, cv şablonları"
         ogUrl="/"
       />
       <HomeBanner />

@@ -63,7 +63,7 @@ export default function MobileApp() {
             </div>
             <div className="pt-6">
               <Link 
-                href="#" 
+                href="https://play.google.com/store/apps/details?id=com.picksoso.cvgen" 
                 className="bg-black text-white px-6 py-3 rounded-lg inline-flex items-center space-x-3 hover:bg-black/80 transition-colors"
               >
                 <FaGooglePlay className="w-6 h-6 text-white" />

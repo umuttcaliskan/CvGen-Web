@@ -11,14 +11,14 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "CvGen | Profesyonel CV Oluşturucu | Ücretsiz CV Hazırlama",
-  description: "Dakikalar içinde profesyonel ve etkileyici CV'ler oluşturun. İş başvurularınızda öne çıkın. Ücretsiz CV şablonları ve kolay kullanım.",
-  keywords: ["cv oluşturucu", "özgeçmiş hazırlama", "ücretsiz cv şablonları", "profesyonel cv", "iş başvurusu", "kariyer"],
+  title: "CvGen | Ücretsiz ve Hızlı CV Oluşturucu | Dakikalar İçinde Profesyonel CV",
+  description: "Ücretsiz ve dakikalar içinde profesyonel CV'ler oluşturun. Kolay kullanımlı arayüzümüzle iş başvurularınızda öne çıkın. Hemen deneyin!",
+  keywords: ["ücretsiz cv oluştur", "hızlı cv hazırlama", "cv oluşturucu", "özgeçmiş hazırlama", "profesyonel cv", "iş başvurusu", "kariyer"],
   authors: [{ name: "PickSoSo" }],
   creator: "PickSoSo",
   openGraph: {
-    title: "CvGen | Profesyonel CV Oluşturucu",
-    description: "Dakikalar içinde profesyonel ve etkileyici CV'ler oluşturun",
+    title: "CvGen | Ücretsiz ve Hızlı CV Oluşturucu",
+    description: "Ücretsiz ve dakikalar içinde profesyonel CV'ler oluşturun. Kolay kullanımlı arayüzümüzle iş başvurularınızda öne çıkın.",
     type: "website",
   },
   robots: {

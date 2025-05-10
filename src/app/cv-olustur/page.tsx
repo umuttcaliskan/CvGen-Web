@@ -397,9 +397,9 @@ export default function CreateCV() {
   return (
     <>
       <SiteHelmet 
-        title="CV Oluştur"
-        description="Hızlı ve kolay bir şekilde profesyonel özgeçmişinizi oluşturun. Tüm bölümleri doldurarak iş başvurularınızda öne çıkın."
-        keywords="cv oluşturma, cv hazırlama, online cv, profesyonel özgeçmiş, ücretsiz cv oluşturma"
+        title="Ücretsiz CV Oluştur | Dakikalar İçinde Hızlı ve Kolay CV Hazırlama"
+        description="Ücretsiz ve dakikalar içinde profesyonel özgeçmişinizi oluşturun. Kolay ve hızlı CV oluşturucu ile iş başvurularınızda öne çıkın. Hemen deneyin!"
+        keywords="ücretsiz cv oluştur, hızlı cv hazırlama, online cv, profesyonel özgeçmiş, cv oluşturucu, dakikada cv, ücretsiz cv şablonları"
         ogUrl="/cv-olustur"
       />
       <div className="min-h-screen bg-gray-50 relative">
