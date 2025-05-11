@@ -38,6 +38,7 @@ export default function RootLayout({
       <head>
         <meta name="google-site-verification" content="FKxABNn3I3zdKWJxWkVLTlYtuFin_2PxKFqdsNgwgQ0" />
         <meta name="google-adsense-account" content="ca-pub-8769506745005038" />
+        <meta name="yandex-verification" content="cd6cec414a1a3e76" />
       </head>
       <body className={inter.variable}>
         <AuthProvider>
