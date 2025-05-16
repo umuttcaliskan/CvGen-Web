@@ -2,13 +2,15 @@
 
 import React, { useState } from 'react';
 import { auth } from '@/firebaseConfig';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { db } from '@/firebaseConfig';
 import { setDoc, doc } from 'firebase/firestore';
 import Link from 'next/link';
 import SiteHelmet from '@/components/Helmet';
+import { useRouter } from 'next/navigation';
 
 function RegisterPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -16,6 +18,7 @@ function RegisterPage() {
     password: '',
     birthDate: '',
   });
+  const [message, setMessage] = useState({ type: '', text: '' });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -24,11 +27,12 @@ function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setMessage({ type: '', text: '' });
+    
     try {
       // Firebase ile kullanıcı kaydı yapma işlemi
       const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-      console.log('Kullanıcı kaydedildi:', userCredential.user);
-
+      
       // Kullanıcı bilgilerini Firestore'a ekleme
       const userId = userCredential.user.uid;
       await setDoc(doc(db, 'users', userId), {
@@ -37,9 +41,24 @@ function RegisterPage() {
         birthDate: formatDate(formData.birthDate),
       });
 
-      console.log('Kullanıcı bilgileri Firestore\'a eklendi.');
-    } catch (error) {
-      console.error('Kayıt hatası:', error);
+      setMessage({ type: 'success', text: 'Kayıt başarılı! Giriş yapılıyor...' });
+      
+      // Otomatik giriş yapma
+      await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      
+      // Ana sayfaya yönlendirme
+      router.push('/');
+      
+    } catch (error: any) {
+      let errorMessage = 'Kayıt sırasında bir hata oluştu.';
+      
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = 'Bu e-posta adresi zaten kullanımda.';
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = 'Şifre çok zayıf. Lütfen daha güçlü bir şifre seçin.';
+      }
+      
+      setMessage({ type: 'error', text: errorMessage });
     }
   };
 
@@ -132,6 +151,14 @@ function RegisterPage() {
           >
             Kayıt Ol
           </button>
+          
+          {message.text && (
+            <div className={`mt-4 p-3 rounded-lg text-center ${
+              message.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+            }`}>
+              {message.text}
+            </div>
+          )}
         </form>
         <div className="mt-6 text-center text-sm text-gray-600">
           Zaten hesabınız var mı?{' '}
