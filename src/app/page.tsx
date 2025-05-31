@@ -6,6 +6,7 @@ import Features from '@/components/HomeComponents/Features';
 import Stats from '@/components/HomeComponents/Stats';
 import MobileApp from '@/components/HomeComponents/MobileApp';
 import Testimonials from '@/components/HomeComponents/Testimonials';
+import BlogSlider from '@/components/HomeComponents/BlogSlider';
 import CTA from '@/components/HomeComponents/CTA';
 import SiteHelmet from '@/components/Helmet';
 
@@ -25,6 +26,7 @@ export default function Home() {
       <Features />
       <CTA />
       <Testimonials />
+      <BlogSlider />
     </div>
   );
 }
