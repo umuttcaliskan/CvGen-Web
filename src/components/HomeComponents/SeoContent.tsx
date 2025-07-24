@@ -170,6 +170,65 @@ const SeoContent: React.FC = () => {
           <em>Bu içerikte yer alan tüm anahtar kelimeler, SEO uyumlu ve doğal bir şekilde metne entegre edilmiştir. <strong>CV oluştur</strong> ve ilgili tüm aramalarınızda en iyi sonuçları elde etmek için bu rehberi kullanabilirsiniz.</em>
         </p>
       </Section>
+
+      {/* Pazarama ile satış ve backlink bölümü */}
+      <div className="mt-10 bg-primary/10 border-l-4 border-primary px-6 py-6 rounded-xl shadow-sm">
+        <p className="text-lg text-gray-800 leading-relaxed">
+          <strong>Pazarama</strong> ile e-ticaret dünyasına adım atmak ve <strong>satışlarını artırırken CV'ni güçlendirmek</strong> ister misin? Kendi işini kurmak, girişimcilik yolculuğunda öne çıkmak ve profesyonel kariyerine değer katmak için <a href="https://www.berkebal.com.tr/pazaramada-satislari-arttirmak/" target="_blank" rel="noopener noreferrer" className="text-primary underline font-bold">Pazarama’da satış arttırma yolları</a> rehberimize göz at! Doğru stratejilerle hem <strong>online satış</strong> hem de <strong>profesyonel CV oluşturma</strong> konusunda bir adım önde olabilirsin. <strong>Pazarama’da satış arttırmak</strong> ve <strong>kariyerini güçlendirmek</strong> için hemen tıkla!
+        </p>
+      </div>
+
+      {/* SEO ve backlink kartları bölümü */}
+      <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {/* Kart 1 */}
+        <a href="https://www.berkebal.com.tr/pazaramada-satislari-arttirmak/" target="_blank" rel="noopener noreferrer" className="block bg-white border border-primary/20 rounded-xl shadow hover:shadow-lg transition p-5 text-center group">
+          <span className="text-primary font-bold text-lg group-hover:underline">pazaramada satış</span>
+        </a>
+        {/* Kart 2 */}
+        <a href="https://www.berkebal.com.tr/pazaramada-satislari-arttirmak/" target="_blank" rel="noopener noreferrer" className="block bg-white border border-primary/20 rounded-xl shadow hover:shadow-lg transition p-5 text-center group">
+          <span className="text-primary font-bold text-lg group-hover:underline">pazaramada satış arttırma</span>
+        </a>
+        {/* Kart 3 */}
+        <a href="https://www.berkebal.com.tr/pazaramada-satislari-arttirmak/" target="_blank" rel="noopener noreferrer" className="block bg-white border border-primary/20 rounded-xl shadow hover:shadow-lg transition p-5 text-center group">
+          <span className="text-primary font-bold text-lg group-hover:underline">pazarama için cv</span>
+        </a>
+        {/* Kart 4 */}
+        <a href="http://www.cvgen.com.tr/sablonlar" target="_blank" rel="noopener noreferrer" className="block bg-white border border-primary/20 rounded-xl shadow hover:shadow-lg transition p-5 text-center group">
+          <span className="text-primary font-bold text-lg group-hover:underline">öğretmen cv</span>
+        </a>
+        {/* Kart 5 */}
+        <a href="http://www.cvgen.com.tr/sablonlar" target="_blank" rel="noopener noreferrer" className="block bg-white border border-primary/20 rounded-xl shadow hover:shadow-lg transition p-5 text-center group">
+          <span className="text-primary font-bold text-lg group-hover:underline">cv şablonları</span>
+        </a>
+        {/* Kart 6 */}
+        <a href="http://www.cvgen.com.tr/" target="_blank" rel="noopener noreferrer" className="block bg-white border border-primary/20 rounded-xl shadow hover:shadow-lg transition p-5 text-center group">
+          <span className="text-primary font-bold text-lg group-hover:underline">ücretsiz cv oluştur</span>
+        </a>
+        {/* Kart 7 */}
+        <a href="http://www.cvgen.com.tr/" target="_blank" rel="noopener noreferrer" className="block bg-white border border-primary/20 rounded-xl shadow hover:shadow-lg transition p-5 text-center group">
+          <span className="text-primary font-bold text-lg group-hover:underline">online cv oluştur</span>
+        </a>
+        {/* Kart 8 */}
+        <a href="http://www.cvgen.com.tr/" target="_blank" rel="noopener noreferrer" className="block bg-white border border-primary/20 rounded-xl shadow hover:shadow-lg transition p-5 text-center group">
+          <span className="text-primary font-bold text-lg group-hover:underline">ats uyumlu cv</span>
+        </a>
+        {/* Kart 9 */}
+        <a href="http://www.cvgen.com.tr/" target="_blank" rel="noopener noreferrer" className="block bg-white border border-primary/20 rounded-xl shadow hover:shadow-lg transition p-5 text-center group">
+          <span className="text-primary font-bold text-lg group-hover:underline">profesyonel cv</span>
+        </a>
+        {/* Kart 10 */}
+        <a href="http://www.cvgen.com.tr/" target="_blank" rel="noopener noreferrer" className="block bg-white border border-primary/20 rounded-xl shadow hover:shadow-lg transition p-5 text-center group">
+          <span className="text-primary font-bold text-lg group-hover:underline">cv oluştur pdf</span>
+        </a>
+        {/* Kart 11 */}
+        <a href="http://www.cvgen.com.tr/" target="_blank" rel="noopener noreferrer" className="block bg-white border border-primary/20 rounded-xl shadow hover:shadow-lg transition p-5 text-center group">
+          <span className="text-primary font-bold text-lg group-hover:underline">cv örnekleri</span>
+        </a>
+        {/* Kart 12 */}
+        <a href="http://www.cvgen.com.tr/" target="_blank" rel="noopener noreferrer" className="block bg-white border border-primary/20 rounded-xl shadow hover:shadow-lg transition p-5 text-center group">
+          <span className="text-primary font-bold text-lg group-hover:underline">cv oluşturma programı</span>
+        </a>
+      </div>
     </div>
   );
 };
