@@ -9,6 +9,7 @@ import Testimonials from '@/components/HomeComponents/Testimonials';
 import BlogSlider from '@/components/HomeComponents/BlogSlider';
 import CTA from '@/components/HomeComponents/CTA';
 import SiteHelmet from '@/components/Helmet';
+import SeoContent from '@/components/HomeComponents/SeoContent';
 
 export default function Home() {
   return (
@@ -25,6 +26,8 @@ export default function Home() {
       <Stats />
       <Features />
       <CTA />
+      {/* SEO içerik alanı - daha mantıklı, uzun ve component olarak */}
+      <SeoContent />
       <Testimonials />
       <BlogSlider />
     </div>
